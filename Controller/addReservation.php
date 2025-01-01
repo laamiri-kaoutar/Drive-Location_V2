@@ -1,14 +1,8 @@
 <?php
 ob_start();
 session_start();
-
  require_once '../Model/Reservation.php';
  if($_SERVER['REQUEST_METHOD'] == "POST" ) {
-
-         
-         
-
-
 
 
          $vehicule=$_POST["id_vehicule"];
