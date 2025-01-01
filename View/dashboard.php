@@ -210,6 +210,74 @@ $vehicules =$vehicule->readAll();
                         </form>
                     </div>
                 </div>
+                <div id="updateVehiculeForm" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+                    <div class="bg-white p-6 rounded-lg w-96">
+                        <h3 class="text-2xl font-bold text-primary mb-4">Add Vehicule</h3>
+                        <form enctype="multipart/form-data" method="POST" action ="../Controller/updateVehicule.php">
+                            <!-- Two-column layout for Marque, Modele, Prix par jour, and Disponibilité -->
+                            <div class="grid grid-cols-2 gap-4">
+                            <input type="hidden" name="id_vehicule" id="id_vehicule" value="">
+
+
+                                <!-- Marque -->
+                                <div class="mb-4">
+                                    <label for="vehiculeMarque" class="block text-sm font-medium text-gray-700">Marque</label>
+                                    <input type="text" id="vehicule_Marque" name="vehiculeMarque" class="w-full border p-2 mt-2" placeholder="Enter Brand">
+                                </div>
+                
+                                <!-- Modele -->
+                                <div class="mb-4">
+                                    <label for="vehiculeModele" class="block text-sm font-medium text-gray-700">Modele</label>
+                                    <input type="text" id="vehicule_Modele" name="vehiculeModele" class="w-full border p-2 mt-2" placeholder="Enter Model">
+                                </div>
+                
+                                <!-- Prix par jour -->
+                                <div class="mb-4">
+                                    <label for="vehiculePrix" class="block text-sm font-medium text-gray-700">Prix par jour</label>
+                                    <input type="number" id="vehicule_Prix" name="vehiculePrix" class="w-full border p-2 mt-2" placeholder="Enter Price per Day" step="0.01">
+                                </div>
+                
+                                <!-- Disponibilité -->
+                                <div class="mb-4">
+                                    <label for="vehiculeDisponibilite" class="block text-sm font-medium text-gray-700">Disponibilité</label>
+                                    <select id="vehicule_Disponibilite" name="vehiculeDisponibilite" class="w-full border p-2 mt-2">
+                                        <option value="1">Disponible</option>
+                                        <option value="0">Indisponible</option>
+                                    </select>
+                                </div>
+                            </div>
+                
+                            <!-- Description (Single-column) -->
+                            <div class="mb-4">
+                                <label for="vehiculeDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                                <textarea id="vehicule_Description" name="vehiculeDescription" class="w-full border p-2 mt-2" placeholder="Enter Description"></textarea>
+                            </div>
+                
+                            <!-- Image (Single-column) -->
+                            <div class="mb-4">
+                                <label>Current Image: <span id="vehicule_Image_Label"></span></label>
+                                <input type="file" id="vehicule_Image" name="vehiculeImage" class="w-full border p-2 mt-2" placeholder="Enter Image URL">
+                            </div>
+                
+                            <!-- Category (Single-column) -->
+                            <div class="mb-4">
+                                <label for="vehiculeCategory" class="block text-sm font-medium text-gray-700">Category</label>
+                                <select id="vehicule_Category" name="vehiculeCategory" class="w-full border p-2 mt-2">
+                                    <!-- Dynamically populated categories -->
+                                    <?php foreach ($categories as $category) {?>
+                                        <option value=" <?= $category["id_categorie"] ?>"><?= $category["nom_categorie"] ?></option>    
+                                    <?php } ?>
+                                </select>
+                            </div>
+                
+                            <!-- Form Buttons -->
+                            <div class="flex justify-between">
+                                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700" onclick="closeUpdateVehiculeForm()">Cancel</button>
+                                <button type="submit" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark">Save changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
 
 
@@ -240,8 +308,8 @@ $vehicules =$vehicule->readAll();
                             <td class="border p-2"><img src="car-image.jpg" alt="Car" class="w-20 h-20 object-cover"></td>
                             <td class="border p-2">
                                 <div class="flex justify-center items-center space-x-4">
-                                    <img src="./img/delete.png" alt="Delete" class="w-6 h-6 cursor-pointer">
-                                    <img src="./img/update.png" alt="Update" class="w-6 h-6 cursor-pointer">
+                                    <a href="../Controller/delete.php"> <img src="./img/delete.png" alt="Delete" class="w-6 h-6 cursor-pointer"></a>
+                                    <a href="../Controller/update.php">  <img src="./img/update.png" alt="Update" class="w-6 h-6 cursor-pointer"></a>
                                 </div>
                             </td>
 
@@ -258,6 +326,14 @@ $vehicules =$vehicule->readAll();
                                 <td class="border p-2"><?= $vehicule["nom_categorie"]?></td>
                                 <td class="border p-2"><?= $vehicule["description"]?></td>
                                 <td class="border p-2"><img src="./img/<?= $vehicule["image"]?>" alt="Car" class="w-20 h-20 object-cover"></td>
+                                <td class="border p-2">
+                                    <div class="flex justify-center items-center space-x-4">
+                                        <a href="../Controller/deleteVehicule.php?carId=<?= $vehicule["id_vehicule"]?>"> <img src="./img/delete.png" alt="Delete" class="w-6 h-6 cursor-pointer"></a>
+                                        <button onclick="openUpdateVehiculeForm(<?= $vehicule['id_vehicule']?>)">
+                                            <img src="./img/update.png" alt="Update" class="w-6 h-6 cursor-pointer">
+                                        </button>
+                                    </div>
+                                </td>
                             </tr>
                              
                         <?php } ?>
@@ -365,6 +441,10 @@ $vehicules =$vehicule->readAll();
         // Show Vehicule Form
         const addVehiculeBtn = document.getElementById('addVehiculeBtn');
         const vehiculeForm = document.getElementById('vehiculeForm');
+        const updateVehiculeForm = document.getElementById('updateVehiculeForm');
+
+
+
         addVehiculeBtn.addEventListener('click', () => {
             vehiculeForm.classList.remove('hidden');
         });
@@ -372,6 +452,47 @@ $vehicules =$vehicule->readAll();
         // Close Vehicule Form
         function closeVehiculeForm() {
             vehiculeForm.classList.add('hidden');
+        }
+
+    
+
+        function openUpdateVehiculeForm(carId) {
+            fetch(`getCarData.php?carId=${carId}`)
+                .then((response) => response.json())
+                .then((car) => {
+                    console.log(car);
+                    
+                    document.getElementById('id_vehicule').value = car.id_vehicule;
+                    document.getElementById('vehicule_Marque').value = car.marque;
+                    document.getElementById('vehicule_Modele').value = car.modele;
+                    document.getElementById('vehicule_Prix').value = car.prix_par_jour;
+                    document.getElementById('vehicule_Disponibilite').value = car.disponibilite;
+                    document.getElementById('vehicule_Description').value = car.description;
+                    // document.getElementById('vehicule_Category').value = car.id_categorie;
+                    document.getElementById('vehicule_Image_Label').innerText = car.image; 
+                    window.onload = function () {
+                        document.getElementById('vehicule_Category').value = car.id_categorie;
+                    };
+
+                    updateVehiculeForm.classList.remove('hidden');
+                })
+                .catch((error) => {
+                    console.error("Error fetching car data:", error);
+                });
+        }
+
+
+
+
+        // function openUpdateVehiculeForm(carId) {
+        //     document.getElementById('id_vehicule').value = carId;
+
+        //     updateVehiculeForm.classList.remove('hidden');
+        // }
+
+       
+        function closeUpdateVehiculeForm() {
+            updateVehiculeForm.classList.add('hidden');
         }
 
         // Show Category Form

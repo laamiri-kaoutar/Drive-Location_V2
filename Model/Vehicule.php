@@ -13,9 +13,9 @@ class Vehicule extends GestionBaseDeDonnees {
         return  $this->execute($query, $params);
     }
 
-    public function update($id , $marque, $modele , $prix_par_jour, $disponibilite , $id_categorie , $description ,  $status  ){
-        $query = "UPDATE vehicule SET marque = ?,modele= ? ,prix_par_jour= ? ,disponibilite= ?,id_categorie= ? , description= ?, status= ? WHERE id_vehicule = ?";
-        $params = [$marque, $modele , $prix_par_jour, $disponibilite , $id_categorie , $description , $status, $id];
+    public function update($id , $marque, $modele , $prix_par_jour, $disponibilite , $id_categorie , $description ,  $image  ){
+        $query = "UPDATE vehicule SET marque = ?,modele= ? ,prix_par_jour= ? ,disponibilite= ?,id_categorie= ? , description= ?, image= ? WHERE id_vehicule = ?";
+        $params = [$marque, $modele , $prix_par_jour, $disponibilite , $id_categorie , $description , $image, $id];
         return  $this->execute($query, $params);
     }
 
@@ -38,3 +38,9 @@ class Vehicule extends GestionBaseDeDonnees {
 
 
 }
+
+
+
+
+
+
