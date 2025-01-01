@@ -320,7 +320,7 @@ $vehicules =$vehicule->readAll();
                                 <td class="border p-2"><?= $vehicule["marque"]?></td>
                                 <td class="border p-2"><?= $vehicule["modele"]?></td>
                                 <td class="border p-2"><?= $vehicule["prix_par_jour"]?>/day</td>
-                                <td class="border p-2"><?= $vehicule["disponibilite"] ?></td>
+                                <td class="border p-2"><?= $vehicule['disponibilite'] ? 'Available' : 'Not Available' ?></td>
                                 <td class="border p-2"><?= $vehicule["nom_categorie"]?></td>
                                 <td class="border p-2"><?= $vehicule["description"]?></td>
                                 <td class="border p-2"><img src="./img/<?= $vehicule["image"]?>" alt="Car" class="w-20 h-20 object-cover"></td>

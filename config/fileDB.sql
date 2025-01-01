@@ -55,3 +55,23 @@ CREATE TABLE avis (
     FOREIGN KEY (id_utilisateur) REFERENCES utilisateur(id_utilisateur) ON DELETE CASCADE,
     FOREIGN KEY (id_vehicule) REFERENCES vehicule(id_vehicule) ON DELETE CASCADE
 );
+
+
+DELIMITER $$
+
+CREATE PROCEDURE AddReservation(
+    IN user_id INT,
+    IN id_vehicule INT,
+    IN date_debut DATE ,
+    IN date_fin DATE ,
+    IN lieu VARCHAR(255) 
+)
+BEGIN
+    -- Insert a new reservation record
+    INSERT INTO reservation(user_id , id_vehicule , date_debut , date_fin , lieu_prise_en_charge  ) 
+    VALUES (user_id, id_vehicule, date_debut, date_fin, lieu);
+END $$
+
+DELIMITER ;
+
+ 

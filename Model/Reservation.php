@@ -11,8 +11,14 @@ class Reservation extends GestionBaseDeDonnees {
     
 
 
+    // public function create($user, $vehicule , $date_debut, $date_fin , $lieu ){
+    //     $query = "INSERT INTO reservation(user_id , id_vehicule , date_debut , date_fin , lieu_prise_en_charge  ) VALUES (?,?,?,?,?)";
+    //     $params = [$user, $vehicule , $date_debut, $date_fin , $lieu];
+    //     return  $this->execute($query, $params);
+    // }
+
     public function create($user, $vehicule , $date_debut, $date_fin , $lieu ){
-        $query = "INSERT INTO reservation(user_id , id_vehicule , date_debut , date_fin , lieu_prise_en_charge  ) VALUES (?,?,?,?,?)";
+        $query = "CALL AddReservation(?,?,?,?,?)";
         $params = [$user, $vehicule , $date_debut, $date_fin , $lieu];
         return  $this->execute($query, $params);
     }

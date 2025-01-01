@@ -23,14 +23,15 @@ class Avis extends GestionBaseDeDonnees {
 
 
     public function deleteById($id){
-        $query = "DELETE FROM  avis  WHERE id_avis = ?";
+        $query = "UPDATE avis SET is_deleted = 1 WHERE id = ?";
+        // $query = "DELETE FROM  avis  WHERE id_avis = ?";
         $params = [$id];
         return  $this->execute($query, $params);
     }
 
 
     public function readAll(){
-        $query = "SELECT * FROM avis a JOIN vehicule v ON v.id_vehicule = a.id_vehicule  JOIN utilisateur u ON u.user_id = a.user_id ";
+        $query = "SELECT * FROM avis a JOIN vehicule v ON v.id_vehicule = a.id_vehicule  JOIN utilisateur u ON u.user_id = a.user_id WHERE is_deleted = 0";
         return  $this->select($query , $params);
     }
 

@@ -33,6 +33,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
              header("Location:../View/authen.php");
             }else {
             $userS = [
+                "id" =>$data['user_id'],
                 "username" => $data['username'],
                 "email" => $data['email'],
                 "role" => $data['role']
