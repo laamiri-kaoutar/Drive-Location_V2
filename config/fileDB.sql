@@ -27,6 +27,7 @@ CREATE TABLE vehicule (
     disponibilite BOOLEAN DEFAULT TRUE,
     id_categorie INT,
     description TEXT,
+    image VARCHAR(250),
     FOREIGN KEY (id_categorie) REFERENCES categorie(id_categorie) ON DELETE SET NULL
 );
 
