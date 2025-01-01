@@ -313,8 +313,6 @@ $vehicules =$vehicule->readAll();
                                 </div>
                             </td>
 
-
-
                         </tr>
                         <?php foreach ($vehicules as $vehicule) {?>
                             <tr class="hover:bg-gray-50">
