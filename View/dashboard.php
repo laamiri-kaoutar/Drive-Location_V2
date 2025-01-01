@@ -1,3 +1,24 @@
+<?php
+require_once '../Model/Vehicule.php';
+require_once '../Model/categorie.php';
+$categorie = new Categorie();
+$categories =$categorie->readAll();
+
+$vehicule = new Vehicule();
+
+$vehicules =$vehicule->readAll();
+// foreach ($vehicules as $vehicule) {
+// echo " <tr><td><br><br></td></tr>";
+// echo $vehicule["nom_categorie"];
+// echo " <tr><td><br><br></td></tr>";
+
+// echo $vehicule["disponibilite"];
+
+// }
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,6 +56,7 @@
                 <div class="flex items-center space-x-2 mb-6">
                     <img src="profile-picture.jpg" alt="User Avatar" class="w-10 h-10 rounded-full">
                     <span class="font-bold">John Doe</span>
+
                 </div>
                 <h1 class="text-xl font-bold mb-4">Go Rent</h1>
             </div>
@@ -59,6 +81,12 @@
                         <i class="ri-bar-chart-line"></i><span>Statistiques</span>
                     </button></li>
                 </ul>
+                                      <!-- Logout Icon -->
+                    <div class="p-6 border-t border-gray-400">
+                        <button onclick="window.location.href='logout.php'" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-red-600 rounded">
+                            <i class="ri-logout-box-line"></i><span>Logout</span>
+                        </button>
+                    </div>
             </nav>
         </aside>
 
@@ -113,75 +141,75 @@
             </section>
 
             <!-- Vehicules Section -->
-            <section id="vehicules" class="dashboard-section hidden bg-white shadow-lg rounded-lg p-6 mb-6">
+            <section id="vehicules" class="dashboard-section  bg-white shadow-lg rounded-lg p-6 mb-6">
                 <h2 class="text-2xl font-bold text-primary mb-4">Vehicules</h2>
                 <button id="addVehiculeBtn" class="bg-secondary text-white px-4 py-2 rounded mb-4 hover:bg-secondary-dark transition-all duration-300 ease-in-out">Add New Vehicule</button>
-<!-- Vehicule Form Modal -->
-<div id="vehiculeForm" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
-    <div class="bg-white p-6 rounded-lg w-96">
-        <h3 class="text-2xl font-bold text-primary mb-4">Add Vehicule</h3>
-        <form>
-            <!-- Two-column layout for Marque, Modele, Prix par jour, and Disponibilité -->
-            <div class="grid grid-cols-2 gap-4">
-                <!-- Marque -->
-                <div class="mb-4">
-                    <label for="vehiculeMarque" class="block text-sm font-medium text-gray-700">Marque</label>
-                    <input type="text" id="vehiculeMarque" name="vehiculeMarque" class="w-full border p-2 mt-2" placeholder="Enter Brand">
+                <!-- Vehicule Form Modal -->
+                <div id="vehiculeForm" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+                    <div class="bg-white p-6 rounded-lg w-96">
+                        <h3 class="text-2xl font-bold text-primary mb-4">Add Vehicule</h3>
+                        <form enctype="multipart/form-data" method="POST" action ="../Controller/addVehicule.php">
+                            <!-- Two-column layout for Marque, Modele, Prix par jour, and Disponibilité -->
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- Marque -->
+                                <div class="mb-4">
+                                    <label for="vehiculeMarque" class="block text-sm font-medium text-gray-700">Marque</label>
+                                    <input type="text" id="vehiculeMarque" name="vehiculeMarque" class="w-full border p-2 mt-2" placeholder="Enter Brand">
+                                </div>
+                
+                                <!-- Modele -->
+                                <div class="mb-4">
+                                    <label for="vehiculeModele" class="block text-sm font-medium text-gray-700">Modele</label>
+                                    <input type="text" id="vehiculeModele" name="vehiculeModele" class="w-full border p-2 mt-2" placeholder="Enter Model">
+                                </div>
+                
+                                <!-- Prix par jour -->
+                                <div class="mb-4">
+                                    <label for="vehiculePrix" class="block text-sm font-medium text-gray-700">Prix par jour</label>
+                                    <input type="number" id="vehiculePrix" name="vehiculePrix" class="w-full border p-2 mt-2" placeholder="Enter Price per Day" step="0.01">
+                                </div>
+                
+                                <!-- Disponibilité -->
+                                <div class="mb-4">
+                                    <label for="vehiculeDisponibilite" class="block text-sm font-medium text-gray-700">Disponibilité</label>
+                                    <select id="vehiculeDisponibilite" name="vehiculeDisponibilite" class="w-full border p-2 mt-2">
+                                        <option value="1">Disponible</option>
+                                        <option value="0">Indisponible</option>
+                                    </select>
+                                </div>
+                            </div>
+                
+                            <!-- Description (Single-column) -->
+                            <div class="mb-4">
+                                <label for="vehiculeDescription" class="block text-sm font-medium text-gray-700">Description</label>
+                                <textarea id="vehiculeDescription" name="vehiculeDescription" class="w-full border p-2 mt-2" placeholder="Enter Description"></textarea>
+                            </div>
+                
+                            <!-- Image (Single-column) -->
+                            <div class="mb-4">
+                                <label for="vehiculeImage" class="block text-sm font-medium text-gray-700">Image URL</label>
+                                <input type="file" id="vehiculeImage" name="vehiculeImage" class="w-full border p-2 mt-2" placeholder="Enter Image URL">
+                            </div>
+                
+                            <!-- Category (Single-column) -->
+                            <div class="mb-4">
+                                <label for="vehiculeCategory" class="block text-sm font-medium text-gray-700">Category</label>
+                                <select id="vehiculeCategory" name="vehiculeCategory" class="w-full border p-2 mt-2">
+                                    <!-- Dynamically populated categories -->
+                                    <?php foreach ($categories as $category) {?>
+                                        <option value=" <?= $category["id_categorie"] ?>"><?= $category["nom_categorie"] ?></option>    
+                                    <?php } ?>
+                                </select>
+                            </div>
+                
+                            <!-- Form Buttons -->
+                            <div class="flex justify-between">
+                                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700" onclick="closeVehiculeForm()">Cancel</button>
+                                <button type="submit" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark">Save</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-
-                <!-- Modele -->
-                <div class="mb-4">
-                    <label for="vehiculeModele" class="block text-sm font-medium text-gray-700">Modele</label>
-                    <input type="text" id="vehiculeModele" name="vehiculeModele" class="w-full border p-2 mt-2" placeholder="Enter Model">
-                </div>
-
-                <!-- Prix par jour -->
-                <div class="mb-4">
-                    <label for="vehiculePrix" class="block text-sm font-medium text-gray-700">Prix par jour</label>
-                    <input type="number" id="vehiculePrix" name="vehiculePrix" class="w-full border p-2 mt-2" placeholder="Enter Price per Day" step="0.01">
-                </div>
-
-                <!-- Disponibilité -->
-                <div class="mb-4">
-                    <label for="vehiculeDisponibilite" class="block text-sm font-medium text-gray-700">Disponibilité</label>
-                    <select id="vehiculeDisponibilite" name="vehiculeDisponibilite" class="w-full border p-2 mt-2">
-                        <option value="true">Disponible</option>
-                        <option value="false">Indisponible</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Description (Single-column) -->
-            <div class="mb-4">
-                <label for="vehiculeDescription" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea id="vehiculeDescription" name="vehiculeDescription" class="w-full border p-2 mt-2" placeholder="Enter Description"></textarea>
-            </div>
-
-            <!-- Image (Single-column) -->
-            <div class="mb-4">
-                <label for="vehiculeImage" class="block text-sm font-medium text-gray-700">Image URL</label>
-                <input type="text" id="vehiculeImage" name="vehiculeImage" class="w-full border p-2 mt-2" placeholder="Enter Image URL">
-            </div>
-
-            <!-- Category (Single-column) -->
-            <div class="mb-4">
-                <label for="vehiculeCategory" class="block text-sm font-medium text-gray-700">Category</label>
-                <select id="vehiculeCategory" name="vehiculeCategory" class="w-full border p-2 mt-2">
-                    <!-- Dynamically populated categories -->
-                    <option value="1">SUV</option>
-                    <option value="2">Sedan</option>
-                    <option value="3">Convertible</option>
-                </select>
-            </div>
-
-            <!-- Form Buttons -->
-            <div class="flex justify-between">
-                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700" onclick="closeVehiculeForm()">Cancel</button>
-                <button type="submit" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark">Save</button>
-            </div>
-        </form>
-    </div>
-</div>
 
 
 
@@ -192,10 +220,12 @@
                             <th class="border p-2">Marque</th>
                             <th class="border p-2">Modele</th>
                             <th class="border p-2">Prix par jour</th>
-                            <th class="border p-2">Disponibilité</th>
+                            <th class="border p-2">Status</th>
                             <th class="border p-2">Category</th>
                             <th class="border p-2">Description</th>
                             <th class="border p-2">Image</th>
+                            <th class="border p-2">Action</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -208,7 +238,29 @@
                             <td class="border p-2">Sedan</td>
                             <td class="border p-2">Comfortable and fuel-efficient</td>
                             <td class="border p-2"><img src="car-image.jpg" alt="Car" class="w-20 h-20 object-cover"></td>
+                            <td class="border p-2">
+                                <div class="flex justify-center items-center space-x-4">
+                                    <img src="./img/delete.png" alt="Delete" class="w-6 h-6 cursor-pointer">
+                                    <img src="./img/update.png" alt="Update" class="w-6 h-6 cursor-pointer">
+                                </div>
+                            </td>
+
+
+
                         </tr>
+                        <?php foreach ($vehicules as $vehicule) {?>
+                            <tr class="hover:bg-gray-50">
+                                <td class="border p-2"><?= $vehicule["id_vehicule"]?></td>
+                                <td class="border p-2"><?= $vehicule["marque"]?></td>
+                                <td class="border p-2"><?= $vehicule["modele"]?></td>
+                                <td class="border p-2"><?= $vehicule["prix_par_jour"]?>/day</td>
+                                <td class="border p-2"><?= $vehicule["disponibilite"] ?></td>
+                                <td class="border p-2"><?= $vehicule["nom_categorie"]?></td>
+                                <td class="border p-2"><?= $vehicule["description"]?></td>
+                                <td class="border p-2"><img src="./img/<?= $vehicule["image"]?>" alt="Car" class="w-20 h-20 object-cover"></td>
+                            </tr>
+                             
+                        <?php } ?>
                     </tbody>
                 </table>
 
@@ -223,10 +275,10 @@
                 <div id="categoryForm" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
                     <div class="bg-white p-6 rounded-lg w-96">
                         <h3 class="text-2xl font-bold text-primary mb-4">Add Categories</h3>
-                        <form id="categoryFormContent">
+                        <form id="categoryFormContent" method="post" action ="../Controller/addCategories.php">
                             <div id="categoryFields">
                                 <div class="mb-4">
-                                    <input type="text" class="w-full border p-2" placeholder="Enter Category Name">
+                                    <input type="text" class="w-full border p-2" name="name[]" placeholder="Enter Category Name">
                                 </div>
                             </div>
                             <button type="button" id="addCategoryInput" class="bg-gray-200 text-primary px-4 py-2 rounded mb-4 hover:bg-gray-300">Add More</button>
@@ -250,6 +302,13 @@
                             <td class="border p-2">1</td>
                             <td class="border p-2">SUV</td>
                         </tr>
+                     <?php foreach ($categories as $category) {?>
+                         <tr class="hover:bg-gray-50">
+                             <td class="border p-2"><?= $category["id_categorie"] ?></td>
+                             <td class="border p-2"><?= $category["nom_categorie"] ?></td>
+                         </tr>
+                     <?php } ?>
+
                     </tbody>
                 </table>
             </section>
@@ -333,7 +392,7 @@
             const categoryFields = document.getElementById('categoryFields');
             const newInput = document.createElement('div');
             newInput.classList.add('mb-4');
-            newInput.innerHTML = '<input type="text" class="w-full border p-2" placeholder="Enter Category Name">';
+            newInput.innerHTML = '<input type="text" name="name[]" class="w-full border p-2" placeholder="Enter Category Name">';
             categoryFields.appendChild(newInput);
         });
     </script>

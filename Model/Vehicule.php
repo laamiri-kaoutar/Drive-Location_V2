@@ -5,11 +5,11 @@ require_once '../config/database.php';
 
 
 
-class vehicule extends GestionBaseDeDonnees {
+class Vehicule extends GestionBaseDeDonnees {
 
-    public function create($marque, $modele , $prix_par_jour, $disponibilite , $id_categorie , $description ){
-        $query = "INSERT INTO vehicule(marque,modele  , prix_par_jour , disponibilite , id_categorie , description  ) VALUES (?,?,?,?,?,?)";
-        $params = [$marque, $modele , $prix_par_jour, $disponibilite , $id_categorie , $description];
+    public function create($marque, $modele , $prix_par_jour, $disponibilite , $id_categorie , $description , $image ){
+        $query = "INSERT INTO vehicule(marque,modele  , prix_par_jour , disponibilite , id_categorie , description ,image ) VALUES (?,?,?,?,?,?,?)";
+        $params = [$marque, $modele , $prix_par_jour, $disponibilite , $id_categorie , $description , $image];
         return  $this->execute($query, $params);
     }
 
@@ -27,7 +27,7 @@ class vehicule extends GestionBaseDeDonnees {
 
     public function readAll(){
         $query = "SELECT * FROM vehicule v JOIN categorie c ON c.id_categorie= v.id_categorie";
-        return  $this->select($query , $params);
+        return  $this->select($query);
     }
  
     public function deleteById($id){
