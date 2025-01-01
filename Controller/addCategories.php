@@ -16,22 +16,7 @@
            
         }
         header("Location:../View/dashboard.php");
-
-
-        // require_once '../Model/categorie.php';
-        // $categorie = new Categorie();
-
-        // $categories =$categorie->readAll();
-        // foreach ($categories as $category) {
-        //     echo " <tr><td><br><br></td></tr>";
-        //    echo $category["nom_categorie"];
-        //    echo " <tr><td><br><br></td></tr>";
-
-        //    echo $category["id_categorie"];
-
-        // }
-
-       
+  
 
 
 }

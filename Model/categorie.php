@@ -15,7 +15,7 @@ class Categorie extends GestionBaseDeDonnees {
 
     public function update($id , $nom_categorie  ){
         $query = "UPDATE categorie SET nom_categorie = ? WHERE id_categorie = ?";
-        $params = [$nom_categorie, $id_categorie];
+        $params = [$nom_categorie, $id];
         return  $this->execute($query, $params);
     }
 

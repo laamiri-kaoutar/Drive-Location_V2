@@ -330,7 +330,7 @@ $vehicules =$vehicule->readAll();
                                     <div class="flex justify-center items-center space-x-4">
                                         <a href="../Controller/deleteVehicule.php?carId=<?= $vehicule["id_vehicule"]?>"> <img src="./img/delete.png" alt="Delete" class="w-6 h-6 cursor-pointer"></a>
                                         <button onclick="openUpdateVehiculeForm(<?= $vehicule['id_vehicule']?>)">
-                                            <img src="./img/update.png" alt="Update" class="w-6 h-6 cursor-pointer">
+                                            <img src="./img/exchange.png" alt="Update" class="w-6 h-6 cursor-pointer">
                                         </button>
                                     </div>
                                 </td>
@@ -366,11 +366,33 @@ $vehicules =$vehicule->readAll();
                     </div>
                 </div>
 
+                       <!-- Categories Form Modal -->
+                <div id="updateCategoryForm" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+                    <div class="bg-white p-6 rounded-lg w-96">
+                        <h3 class="text-2xl font-bold text-primary mb-4">Add Categories</h3>
+                        <form id="categoryFormContent" method="post" action ="../Controller/updateCategories.php">
+                            <div id="categoryFields">
+                                <div class="mb-4">
+                                    <input type="hidden" name="id_category" id="id_category" value="">
+
+                                    <input type="text" class="w-full border p-2" id="name_category" name="name" placeholder="Enter Category Name">
+                                </div>
+                            </div>
+                            <div class="flex justify-between">
+                                <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-700" onclick="closeUpdateCategoryForm()">Cancel</button>
+                                <button type="submit" class="bg-secondary text-white px-4 py-2 rounded hover:bg-secondary-dark">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <table class="w-full border-collapse border border-gray-300 mb-4">
                     <thead>
                         <tr class="bg-gray-100">
                             <th class="border p-2">ID</th>
                             <th class="border p-2">Category Name</th>
+                            <th class="border p-2">action</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -382,6 +404,14 @@ $vehicules =$vehicule->readAll();
                          <tr class="hover:bg-gray-50">
                              <td class="border p-2"><?= $category["id_categorie"] ?></td>
                              <td class="border p-2"><?= $category["nom_categorie"] ?></td>
+                             <td class="border p-2">
+                                    <div class="flex justify-center items-center space-x-4">
+                                        <a href="../Controller/deleteCategory.php?id=<?= $category["id_categorie"]?>"> <img src="./img/delete.png" alt="Delete" class="w-6 h-6 cursor-pointer"></a>
+                                        <button onclick="openUpdateCategoryForm(<?= $category['id_categorie']?>)">
+                                            <img src="./img/exchange.png" alt="Update" class="w-6 h-6 cursor-pointer">
+                                        </button>
+                                    </div>
+                            </td>
                          </tr>
                      <?php } ?>
 
@@ -484,12 +514,6 @@ $vehicules =$vehicule->readAll();
 
 
 
-        // function openUpdateVehiculeForm(carId) {
-        //     document.getElementById('id_vehicule').value = carId;
-
-        //     updateVehiculeForm.classList.remove('hidden');
-        // }
-
        
         function closeUpdateVehiculeForm() {
             updateVehiculeForm.classList.add('hidden');
@@ -506,6 +530,31 @@ $vehicules =$vehicule->readAll();
         function closeCategoryForm() {
             categoryForm.classList.add('hidden');
         }
+
+        const updateCategoryForm = document.getElementById('updateCategoryForm');
+
+        function openUpdateCategoryForm(id) {
+
+            fetch(`getCategoryData.php?id=${id}`)
+                .then((response) => response.json())
+                .then((category) => {
+                    console.log(category);
+                    
+                    document.getElementById('id_category').value = category.id_categorie;
+                    document.getElementById('name_category').value = category.nom_categorie;
+                    updateCategoryForm.classList.remove('hidden');
+                })
+                .catch((error) => {
+                    console.error("Error fetching category data:", error);
+                });
+
+            
+        }
+
+        function closeUpdateCategoryForm() {
+            updateCategoryForm.classList.add('hidden');
+        }
+
 
         // Add More Category Fields
         const addCategoryInput = document.getElementById('addCategoryInput');
