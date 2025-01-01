@@ -508,11 +508,7 @@ $vehicules =$vehicule->readAll();
                     console.error("Error fetching car data:", error);
                 });
         }
-
-
-
-
-       
+ 
         function closeUpdateVehiculeForm() {
             updateVehiculeForm.classList.add('hidden');
         }
