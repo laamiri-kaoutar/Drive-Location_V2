@@ -166,12 +166,7 @@ $aviss = $avis->readByUser($user);
                         <!-- <div class="nav-item dropdown">
                             <a href="#" class="nav-link" data-bs-toggle="dropdown"><span class="dropdown-toggle">Pages</span></a>
                             <div class="dropdown-menu m-0">
-                                <a href="#" class="dropdown-item" >Feature</a>
-                                <a href="countries.html" class="dropdown-item">Countries</a>
-                                <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                                <a href="training.html" class="dropdown-item">Training</a>
-                                <a href="404.html" class="dropdown-item">404 Page</a>
-                            </div>
+                            
                         </div> -->
 
                         <div class="nav-item dropdown">
