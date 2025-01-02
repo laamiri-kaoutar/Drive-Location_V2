@@ -42,7 +42,10 @@ class Reservation extends GestionBaseDeDonnees {
     }
 
     public function deleteById($id){
-        $query = "DELETE FROM  reservation  WHERE id_reservation = ?";
+
+        // $query = "DELETE FROM  reservation  WHERE id_reservation = ?";
+        $query = "UPDATE reservation SET is_deleted = 1 WHERE id_reservation = ?";
+
         $params = [$id];
         return  $this->execute($query, $params);
     }
@@ -54,7 +57,7 @@ class Reservation extends GestionBaseDeDonnees {
     }
 
     public function readByUser($id){
-        $query = "SELECT * FROM reservation r JOIN vehicule v ON v.id_vehicule = r.id_vehicule  where r.user_id = ?";
+        $query = "SELECT * FROM reservation r JOIN vehicule v ON v.id_vehicule = r.id_vehicule  where r.user_id = ? AND is_deleted = 0";
         $params = [$id];
         return  $this->select($query , $params);
     }

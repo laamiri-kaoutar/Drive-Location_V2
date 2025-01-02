@@ -1,15 +1,18 @@
 <?php
- require_once '../Model/categorie.php';
+ require_once '../Model/Reservation.php';
 
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
     var_dump($id);
 
-    $categorie = new Categorie();
+    $reservation = new Reservation();
    
-    if ($categorie->deleteById($id)) {
+    if ($reservation->deleteById($id)) {
         // var_dump($categorie->create($name));
-        header("Location:../View/dashboard.php");
+        echo "this is wooooorkinggg";
+        var_dump($reservation->getElementById($id));
+
+        header('Location: ../View/index.php');     
     }
   
 

@@ -3,6 +3,8 @@ session_start();
 
 require_once '../Model/Vehicule.php';
 require_once '../Model/Reservation.php';
+require_once '../Model/Avis.php';
+
 
 
 $vehicule = new Vehicule();
@@ -14,9 +16,24 @@ $user= $_SESSION["user"]["id"];
 $reservations = $reservation->readByUser($user);
 // var_dump($reservations);
 
+$avis = new Avis();
+$aviss = $avis->readByUser($user);
+// var_dump($aviss);
+
+
+
+
+
+
+
+
+
+
 
 
 ?>
+
+
 
 
 
@@ -280,6 +297,8 @@ $reservations = $reservation->readByUser($user);
                                                     <?= $vehicule['description'] ?>
                                                 </p>
                                                 <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(<?= $vehicule['id_vehicule'] ?>)" >Explore More</a>
+                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="showAvisForm(<?= $vehicule['id_vehicule'] ?>)" >avis</a>
+
                                             </div>
                                         </div>
                                     </div>
@@ -327,7 +346,11 @@ $reservations = $reservation->readByUser($user);
                                         <strong>Pick from:</strong> <?= $reservation['lieu_prise_en_charge'] ?><br>
                                         <strong>Vehicle:</strong> <?= $reservation['marque'] ?>  <?= $reservation['modele'] ?><br>
                                     </p>
-                                    <a class="btn btn-secondary rounded-pill" onclick="openUpdateReservationForm( <?= $reservation['id_reservation'] ?>)"><i class="fa-regular fa-pen-to-square"></i></a>
+                                    <div class="flex">
+                                        <a class="btn btn-secondary rounded-pill" onclick="openUpdateReservationForm( <?= $reservation['id_reservation'] ?>)"><i class="fa-regular fa-pen-to-square"></i></a>
+                                        <a class="btn btn-secondary rounded-pill" href="../Controller/cancelReservation.php?id=<?= $reservation['id_reservation'] ?>"  ><i class="fa-regular fa-trash-can"></i></a>
+                                    </div>
+               
                                 </div>
                             </div>
                         </div>
@@ -352,72 +375,33 @@ $reservations = $reservation->readByUser($user);
                     <!-- <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat deleniti amet at atque sequi quibusdam cumque itaque repudiandae temporibus, eius nam mollitia voluptas maxime veniam necessitatibus saepe in ab? Repellat!</p> -->
                 </div>
                 <div class="owl-carousel testimonial-carousel wow zoomInDown" data-wow-delay="0.2s">
+                <?php foreach ($aviss as $opinion) { ?>
                     <div class="testimonial-item">
                         <div class="testimonial-content p-4 mb-5">
-                            <p class="fs-5 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitati eiusmod tempor incididunt.
+                            <p class="fs-5 mb-0">
+                                <?= $opinion['commentaire'] ?>
                             </p>
+                            <div class="flex">
+                                <a class="btn btn-secondary rounded-pill" onclick="openUpdateAvisForm( <?= $opinion['id_avis'] ?>)"><i class="fa-regular fa-pen-to-square"></i></a>
+                                <a class="btn btn-secondary rounded-pill" href="../Controller/deleteAvis.php?id=<?= $opinion['id_avis'] ?>"  ><i class="fa-regular fa-trash-can"></i></a>
+                            </div>
                             <div class="d-flex justify-content-end">
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
+                                <?php for ($i=0; $i <  $opinion['note'] ; $i++) { ?>
+                                    <i class="fas fa-star text-secondary"></i>
+                                <?php } ?>
                             </div>
-                        </div>
-                        <div class="d-flex">
+                            </div>
+                            <div class="d-flex">
                             <div class="rounded-circle me-4" style="width: 100px; height: 100px;">
-                                <img class="img-fluid rounded-circle" src="img/gallery-1.jpg" alt="img">
+                                <img class="img-fluid rounded-circle" src="./img/<?= $opinion['image'] ?>"  alt="img">
+                                </div>
+                                <div class="my-auto">
+                                <h5><?= $opinion['modele'] ?></h5>
+                                    <p class="mb-0"><?= $opinion['marque'] ?></p>
+                                </div>
                             </div>
-                            <div class="my-auto">
-                                <h5>Person Name</h5>
-                                <p class="mb-0">Profession</p>
-                            </div>
-                        </div>
                     </div>
-                    <div class="testimonial-item">
-                        <div class="testimonial-content p-4 mb-5">
-                            <p class="fs-5 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitati eiusmod tempor incididunt.
-                            </p>
-                            <div class="d-flex justify-content-end">
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                            </div>
-                        </div>
-                        <div class="d-flex">
-                            <div class="rounded-circle me-4" style="width: 100px; height: 100px;">
-                                <img class="img-fluid rounded-circle" src="img/gallery-2.jpg" alt="img">
-                            </div>
-                            <div class="my-auto">
-                                <h5>Person Name</h5>
-                                <p class="mb-0">Profession</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="testimonial-item">
-                        <div class="testimonial-content p-4 mb-5">
-                            <p class="fs-5 mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitati eiusmod tempor incididunt.
-                            </p>
-                            <div class="d-flex justify-content-end">
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                                <i class="fas fa-star text-secondary"></i>
-                            </div>
-                        </div>
-                        <div class="d-flex">
-                            <div class="rounded-circle me-4" style="width: 100px; height: 100px;">
-                                <img class="img-fluid rounded-circle" src="img/gallery-4.jpg" alt="img">
-                            </div>
-                            <div class="my-auto">
-                                <h5>Person Name</h5>
-                                <p class="mb-0">Profession</p>
-                            </div>
-                        </div>
-                    </div>
+                <?php } ?>                   
                 </div>
             </div>
         </div>
@@ -518,6 +502,98 @@ $reservations = $reservation->readByUser($user);
         </form>
     </div>
 </div>
+
+
+<!-- Modal (Popup) Avis Form -->
+<div id="avisModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAvisForm()">&times;</span>
+        <div class="sub-style">
+            <h5 class="sub-title text-primary pe-3">Give Your Feedback</h5>
+        </div>
+        <h1 class="display-5 mb-4">Submit Your Review</h1>
+        <form id="avisForm" action="../Controller/addAvis.php" method="POST">
+            <!-- Hidden Inputs for User ID and Car ID -->
+            <input type="hidden" name="id_vehicule" id="id_vehiculeV" value="">
+
+            <div class="row g-4">
+                <!-- Commentaire -->
+                <div class="col-12">
+                    <div class="form-floating">
+                        <textarea class="form-control" id="commentaire" name="commentaire" placeholder="Leave your comment" required></textarea>
+                        <label for="commentaire">Your Comment</label>
+                    </div>
+                </div>
+
+                <!-- Note -->
+                <div class="col-12">
+                    <div class="form-floating">
+                        <select class="form-control" id="note" name="note" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <label for="note">Rating (1-5)</label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary w-100 py-3">Submit Review</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="updateAvisModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeUpdateAvisForm()">&times;</span>
+        <div class="sub-style">
+            <h5 class="sub-title text-primary pe-3">Give Your Feedback</h5>
+        </div>
+        <h1 class="display-5 mb-4">Submit Your Review</h1>
+        <form id="avisForm" action="../Controller/updateAvis.php" method="POST">
+            <!-- Hidden Inputs for User ID and Car ID -->
+            <input type="hidden" name="id_vehicule" id="id_vehiculeU" value="">
+            <input type="hidden" name="id_avis" id="id_avis" value="">
+
+
+            <div class="row g-4">
+                <!-- Commentaire -->
+                <div class="col-12">
+                    <div class="form-floating">
+                        <textarea class="form-control" id="commentaireU" name="commentaire" placeholder="Leave your comment" required></textarea>
+                        <label for="commentaire">Your Comment</label>
+                    </div>
+                </div>
+
+                <!-- Note -->
+                <div class="col-12">
+                    <div class="form-floating">
+                        <select class="form-control" id="noteU" name="note" required>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                        <label for="note">Rating (1-5)</label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary w-100 py-3">Submit Review</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 
  
 
@@ -784,6 +860,51 @@ function closeUpdateReservationForm() {
     // Hide the modal
     document.getElementById('updateReservationModal').style.display = 'none';
 }
+
+    // Show the modal
+    function showAvisForm(id) {
+        document.getElementById('id_vehiculeV').value = id;
+        document.getElementById("avisModal").style.display = "flex";
+    }
+
+    // Close the modal
+    function closeAvisForm() {
+        document.getElementById("avisModal").style.display = "none";
+    }
+
+    // Close modal if clicked outside of the modal content
+    window.onclick = function(event) {
+        if (event.target == document.getElementById("avisModal")) {
+            closeAvisForm();
+        }
+    }
+
+    function openUpdateAvisForm(id) {
+        fetch(`getAvisData.php?id=${id}`)
+                .then((response) => response.json())
+                .then((avis) => {
+                    console.log(avis);
+
+                    document.getElementById('commentaireU').value = avis.commentaire;
+                    document.getElementById('noteU').value = avis.note;
+                    document.getElementById('id_vehiculeU').value = avis.id_vehicule;
+                    document.getElementById('id_avis').value = avis.id_avis;
+                    document.getElementById("updateAvisModal").style.display = "flex";
+                })
+                .catch((error) => {
+                    console.error("Error fetching category data:", error);
+                });
+
+
+
+    }
+
+    // Close the modal
+    function closeUpdateAvisForm() {
+        document.getElementById("updateAvisModal").style.display = "none";
+    }
+
+
 
     </script>
     
