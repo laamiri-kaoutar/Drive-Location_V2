@@ -12,7 +12,7 @@ $vehicules =$vehicule->readAll();
 $reservation = new Reservation();
 $user= $_SESSION["user"]["id"];
 $reservations = $reservation->readByUser($user);
-var_dump($reservations);
+// var_dump($reservations);
 
 
 
@@ -37,6 +37,8 @@ var_dump($reservations);
 
         <!-- Icon Font Stylesheet -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
         <!-- Libraries Stylesheet -->
@@ -153,7 +155,6 @@ var_dump($reservations);
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav ms-auto py-0">
-                        <button onclick="openUpdateReservationForm(1)"> cliickkk hhere</button>
                         <a href="index.html" class="nav-item nav-link active">Home</a>
                         <a href="about.html" class="nav-item nav-link">About</a>
                         <a href="service.html" class="nav-item nav-link">Service</a>
@@ -315,77 +316,22 @@ var_dump($reservations);
                                 </div>
                                 <div class="feature-content d-flex flex-column">
                                     <!-- Display reservation status -->
-                                    <h6 class="mb-3 text-uppercase"><?= ucfirst($reservation['status']) ?></h6>
+                                    <h6 class="mb-3 text-uppercase 
+                                        <?= $reservation['status'] === 'pending' ? 'text-warning' : ($reservation['status'] === 'approved' ? 'text-success' : 'text-danger') ?>">
+                                        <?= ucfirst($reservation['status']) ?>
+                                    </h6>
                                     <p class="mb-3">
                                         <!-- Display reservation details -->
                                         <strong>Start Date:</strong> <?= $reservation['date_debut'] ?><br>
                                         <strong>End Date:</strong> <?= $reservation['date_fin'] ?><br>
-                                        <strong>Pickup Location:</strong> <?= $reservation['lieu_prise_en_charge'] ?><br>
+                                        <strong>Pick from:</strong> <?= $reservation['lieu_prise_en_charge'] ?><br>
                                         <strong>Vehicle:</strong> <?= $reservation['marque'] ?>  <?= $reservation['modele'] ?><br>
                                     </p>
-                                    <a class="btn btn-secondary rounded-pill" href="#">Read More <i class="fas fa-arrow-right ms-2"></i></a>
+                                    <a class="btn btn-secondary rounded-pill" onclick="openUpdateReservationForm( <?= $reservation['id_reservation'] ?>)"><i class="fa-regular fa-pen-to-square"></i></a>
                                 </div>
                             </div>
                         </div>
                     <?php } ?>
-
-                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="feature-item text-center p-4">
-                            <div class="feature-icon p-3 mb-4">
-                            
-                                <img src="img/car-rent-2.png" class="img-fluid w-100 rounded" alt="Image">
-                           
-                                <!-- <i class="fas fa-dollar-sign fa-4x text-primary"></i> -->
-                            </div>
-                            <div class="feature-content d-flex flex-column">
-                                <h6 class="mb-3">Cost-Effective</h6>
-                                <p class="mb-3">
-                                    <strong> : </strong> <?= $vehicule['nom_categorie'] ?><br>
-
-                                </p>
-                                <a class="btn btn-secondary rounded-pill" href="#">Read More<i class="fas fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.3s">
-                        <div class="feature-item text-center p-4">
-                            <div class="feature-icon p-3 mb-4">
-                                <i class="fab fa-cc-visa fa-4x text-primary"></i>
-                            </div>
-                            <div class="feature-content d-flex flex-column">
-                                <h5 class="mb-3">Visa Assistance</h5>
-                                <p class="mb-3">Dolor, sit amet consectetur adipisicing elit. Soluta inventore cum accusamus,</p>
-                                <a class="btn btn-secondary rounded-pill" href="#">Read More<i class="fas fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.5s">
-                        <div class="feature-item text-center p-4">
-                            <div class="feature-icon p-3 mb-4">
-                                <i class="fas fa-atlas fa-4x text-primary"></i>
-                            </div>
-                            <div class="feature-content d-flex flex-column">
-                                <h5 class="mb-3">Faster Processing</h5>
-                                <p class="mb-3">Dolor, sit amet consectetur adipisicing elit. Soluta inventore cum accusamus,</p>
-                                <a class="btn btn-secondary rounded-pill" href="#">Read More<i class="fas fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.7s">
-                        <div class="feature-item text-center p-4">
-                            <div class="feature-icon p-3 mb-4">
-                                <i class="fas fa-users fa-4x text-primary"></i>
-                            </div>
-                            <div class="feature-content d-flex flex-column">
-                                <h5 class="mb-3">Direct Interviews</h5>
-                                <p class="mb-3">Dolor, sit amet consectetur adipisicing elit. Soluta inventore cum accusamus,</p>
-                                <a class="btn btn-secondary rounded-pill" href="#">Read More<i class="fas fa-arrow-right ms-2"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <a class="btn btn-primary border-secondary rounded-pill py-3 px-5 wow fadeInUp" data-wow-delay="0.1s" href="#">More Features</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -528,7 +474,7 @@ var_dump($reservations);
 <!-- Updatte Reservation Form -->
 <div id="updateReservationModal" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="closeReservationForm()">&times;</span>
+        <span class="close" onclick="closeUpdateReservationForm()">&times;</span>
         <div class="sub-style">
             <h5 class="sub-title text-primary pe-3">Reserve Your Car</h5>
         </div>
