@@ -21,16 +21,6 @@ $aviss = $avis->readByUser($user);
 // var_dump($aviss);
 
 
-
-
-
-
-
-
-
-
-
-
 ?>
 
 
