@@ -1,9 +1,20 @@
 <?php
+session_start();
+
 require_once '../Model/Vehicule.php';
+require_once '../Model/Reservation.php';
+
 
 $vehicule = new Vehicule();
 
 $vehicules =$vehicule->readAll();
+
+$reservation = new Reservation();
+$user= $_SESSION["user"]["id"];
+$reservations = $reservation->readByUser($user);
+var_dump($reservations);
+
+
 
 ?>
 
@@ -142,13 +153,14 @@ $vehicules =$vehicule->readAll();
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <div class="navbar-nav ms-auto py-0">
+                        <button onclick="openUpdateReservationForm(1)"> cliickkk hhere</button>
                         <a href="index.html" class="nav-item nav-link active">Home</a>
                         <a href="about.html" class="nav-item nav-link">About</a>
                         <a href="service.html" class="nav-item nav-link">Service</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link" data-bs-toggle="dropdown"><span class="dropdown-toggle">Pages</span></a>
                             <div class="dropdown-menu m-0">
-                                <a href="feature.html" class="dropdown-item">Feature</a>
+                                <a href="#" class="dropdown-item" >Feature</a>
                                 <a href="countries.html" class="dropdown-item">Countries</a>
                                 <a href="testimonial.html" class="dropdown-item">Testimonial</a>
                                 <a href="training.html" class="dropdown-item">Training</a>
@@ -158,7 +170,7 @@ $vehicules =$vehicule->readAll();
                         <a href="contact.html" class="nav-item nav-link">Contact</a>
                     </div>
                     <button class="btn btn-primary btn-md-square border-secondary mb-3 mb-md-3 mb-lg-0 me-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search"></i></button>
-                    <a href="" class="btn btn-primary border-secondary rounded-pill py-2 px-4 px-lg-3 mb-3 mb-md-3 mb-lg-0">Get A Quote</a>
+                    <a href="" class="btn btn-primary border-secondary rounded-pill py-2 px-4 px-lg-3 mb-3 mb-md-3 mb-lg-0" >Get A Quote</a>
                 </div>
             </nav>
         </div>
@@ -232,7 +244,7 @@ $vehicules =$vehicule->readAll();
         <!-- Modal Search End -->
 
 
-        <!-- Services Start -->
+        <!-- Vehicules Start -->
         <div class="container-fluid service overflow-hidden pt-5">
             <div class="container py-5">
                 <div class="section-title text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">
@@ -278,7 +290,7 @@ $vehicules =$vehicule->readAll();
                 </div>
             </div>
         </div>
-        <!-- Services End -->
+        <!-- Vehicules End -->
 
 
 
@@ -287,20 +299,50 @@ $vehicules =$vehicule->readAll();
             <div class="container">
                 <div class="section-title text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="sub-style">
-                        <h5 class="sub-title text-primary px-3">Why Choose Us</h5>
+                        <h5 class="sub-title text-primary px-3">My Reservations</h5>
                     </div>
-                    <h1 class="display-5 mb-4">Offer Tailor Made Services That Our Client Requires</h1>
-                    <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat deleniti amet at atque sequi quibusdam cumque itaque repudiandae temporibus, eius nam mollitia voluptas maxime veniam necessitatibus saepe in ab? Repellat!</p>
+                    <h1 class="display-5 mb-4">View and Manage Your Bookings</h1>
+                    <!-- <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat deleniti amet at atque sequi quibusdam cumque itaque repudiandae temporibus, eius nam mollitia voluptas maxime veniam necessitatibus saepe in ab? Repellat!</p> -->
+                
                 </div>
                 <div class="row g-4 justify-content-center text-center">
+                    <?php foreach ($reservations as $reservation) { ?>
+                        <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="feature-item text-center p-4">
+                                <div class="feature-icon p-3 mb-4">
+                                    <!-- Display the vehicle image -->
+                                    <img src="img/<?= $reservation['image'] ?>" class="img-fluid w-100 rounded" alt="Vehicle Image">
+                                </div>
+                                <div class="feature-content d-flex flex-column">
+                                    <!-- Display reservation status -->
+                                    <h6 class="mb-3 text-uppercase"><?= ucfirst($reservation['status']) ?></h6>
+                                    <p class="mb-3">
+                                        <!-- Display reservation details -->
+                                        <strong>Start Date:</strong> <?= $reservation['date_debut'] ?><br>
+                                        <strong>End Date:</strong> <?= $reservation['date_fin'] ?><br>
+                                        <strong>Pickup Location:</strong> <?= $reservation['lieu_prise_en_charge'] ?><br>
+                                        <strong>Vehicle:</strong> <?= $reservation['marque'] ?>  <?= $reservation['modele'] ?><br>
+                                    </p>
+                                    <a class="btn btn-secondary rounded-pill" href="#">Read More <i class="fas fa-arrow-right ms-2"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php } ?>
+
                     <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="feature-item text-center p-4">
                             <div class="feature-icon p-3 mb-4">
-                                <i class="fas fa-dollar-sign fa-4x text-primary"></i>
+                            
+                                <img src="img/car-rent-2.png" class="img-fluid w-100 rounded" alt="Image">
+                           
+                                <!-- <i class="fas fa-dollar-sign fa-4x text-primary"></i> -->
                             </div>
                             <div class="feature-content d-flex flex-column">
-                                <h5 class="mb-3">Cost-Effective</h5>
-                                <p class="mb-3">Dolor, sit amet consectetur adipisicing elit. Soluta inventore cum accusamus,</p>
+                                <h6 class="mb-3">Cost-Effective</h6>
+                                <p class="mb-3">
+                                    <strong> : </strong> <?= $vehicule['nom_categorie'] ?><br>
+
+                                </p>
                                 <a class="btn btn-secondary rounded-pill" href="#">Read More<i class="fas fa-arrow-right ms-2"></i></a>
                             </div>
                         </div>
@@ -351,76 +393,6 @@ $vehicules =$vehicule->readAll();
 
 
 
-        <!-- Countries We Offer Start -->
-        <!-- <div class="container-fluid country overflow-hidden py-5">
-            <div class="container">
-                <div class="section-title text-center wow fadeInUp" data-wow-delay="0.1s" style="margin-bottom: 70px;">
-                    <div class="sub-style">
-                        <h5 class="sub-title text-primary px-3">COUNTRIES WE OFFER</h5>
-                    </div>
-                    <h1 class="display-5 mb-4">Immigration & visa services following Countries</h1>
-                    <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat deleniti amet at atque sequi quibusdam cumque itaque repudiandae temporibus, eius nam mollitia voluptas maxime veniam necessitatibus saepe in ab? Repellat!</p>
-                </div>
-                <div class="row g-4 text-center">
-                    <div class="col-lg-6 col-xl-3 mb-5 mb-xl-0 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="country-item">
-                            <div class="rounded overflow-hidden">
-                                <img src="img/country-1.jpg" class="img-fluid w-100 rounded" alt="Image">
-                            </div>
-                            <div class="country-flag">
-                                <img src="img/brazil.jpg" class="img-fluid rounded-circle" alt="Image">
-                            </div>
-                            <div class="country-name">
-                                <a href="#" class="text-white fs-4">Brazil</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xl-3 mb-5 mb-xl-0 wow fadeInUp" data-wow-delay="0.3s">
-                        <div class="country-item">
-                            <div class="rounded overflow-hidden">
-                                <img src="img/country-2.jpg" class="img-fluid w-100 rounded" alt="Image">
-                            </div>
-                            <div class="country-flag">
-                                <img src="img/india.jpg" class="img-fluid rounded-circle" alt="Image">
-                            </div>
-                            <div class="country-name">
-                                <a href="#" class="text-white fs-4">india</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xl-3 mb-5 mb-xl-0 wow fadeInUp" data-wow-delay="0.5s">
-                        <div class="country-item">
-                            <div class="rounded overflow-hidden">
-                                <img src="img/country-3.jpg" class="img-fluid w-100 rounded" alt="Image">
-                            </div>
-                            <div class="country-flag">
-                                <img src="img/usa.jpg" class="img-fluid rounded-circle" alt="Image">
-                            </div>
-                            <div class="country-name">
-                                <a href="#" class="text-white fs-4">New York</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-xl-3 mb-5 mb-xl-0 wow fadeInUp" data-wow-delay="0.7s">
-                        <div class="country-item">
-                            <div class="rounded overflow-hidden">
-                                <img src="img/country-4.jpg" class="img-fluid w-100 rounded" alt="Image">
-                            </div>
-                            <div class="country-flag">
-                                <img src="img/italy.jpg" class="img-fluid rounded-circle" alt="Image">
-                            </div>
-                            <div class="country-name">
-                                <a href="#" class="text-white fs-4">Italy</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12">
-                        <a class="btn btn-primary border-secondary rounded-pill py-3 px-5 wow fadeInUp" data-wow-delay="0.1s" href="#">More Countries</a>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <!-- Countries We Offer End -->
 
 
         <!-- Testimonial Start -->
@@ -553,22 +525,72 @@ $vehicules =$vehicule->readAll();
     </div>
 </div>
 
+<!-- Updatte Reservation Form -->
+<div id="updateReservationModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeReservationForm()">&times;</span>
+        <div class="sub-style">
+            <h5 class="sub-title text-primary pe-3">Reserve Your Car</h5>
+        </div>
+        <h1 class="display-5 mb-4">Confirm Your Reservation</h1>
+        <form id="reservationForm" action="../Controller/updateReservation.php" method="POST">
+            <!-- Hidden Input for Car ID -->
+            <input type="hidden" name="id_vehicule" id="U_id_vehicule" value="">
+            <input type="hidden" name="id_reservation" id="id_reservation" value="">
+
+
+            <div class="row g-4">
+                <!-- Date Debut -->
+                <div class="col-lg-12 col-xl-6">
+                    <div class="form-floating">
+                        <input type="date" class="form-control" id="U_date_debut" name="date_debut" required>
+                        <label for="date_debut">Start Date</label>
+                    </div>
+                </div>
+
+                <!-- Date Fin -->
+                <div class="col-lg-12 col-xl-6">
+                    <div class="form-floating">
+                        <input type="date" class="form-control" id="U_date_fin" name="date_fin" required>
+                        <label for="date_fin">End Date</label>
+                    </div>
+                </div>
+
+                <!-- Pickup Location -->
+                <div class="col-lg-12 col-xl-6">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="U_lieu_prise_en_charge" name="lieu_prise_en_charge" placeholder="Pickup Location" required>
+                        <label for="lieu_prise_en_charge">Pickup Location</label>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary w-100 py-3">Update Reservation</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+ 
+
 
         <!-- Training Start -->
-        <div class="container-fluid training overflow-hidden bg-light py-5">
+        <!-- <div class="container-fluid training overflow-hidden bg-light py-5">
             <div class="container py-5">
                 <div class="section-title text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="sub-style">
                         <h5 class="sub-title text-primary px-3">My Reservations</h5>
                     </div>
                     <h1 class="display-5 mb-4">View and Manage Your Bookings</h1>
-                    <!-- <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat deleniti amet at atque sequi quibusdam cumque itaque repudiandae temporibus, eius nam mollitia voluptas maxime veniam necessitatibus saepe in ab? Repellat!</p> -->
+                    <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat deleniti amet at atque sequi quibusdam cumque itaque repudiandae temporibus, eius nam mollitia voluptas maxime veniam necessitatibus saepe in ab? Repellat!</p>
                 </div>
                 <div class="row g-4">
-                    <div class="col-lg-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
+                <div class="col-lg-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
                         <div class="training-item">
                             <div class="training-inner">
-                                <img src="img/car-rent-1.png" class="img-fluid w-100 rounded" alt="Image">
+                                <img src="img/training-1.jpg" class="img-fluid w-100 rounded" alt="Image">
                                 <div class="training-title-name">
                                     <a href="#" class="h4 text-white mb-0">IELTS</a>
                                     <a href="#" class="h4 text-white mb-0">Coaching</a>
@@ -576,6 +598,37 @@ $vehicules =$vehicule->readAll();
                             </div>
                             <div class="training-content bg-secondary rounded-bottom p-4">
                                 <a href="#"><h4 class="text-white">IELTS Coaching</h4></a>
+                                <p class="text-white-50">Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem, veritatis.</p>
+                                <a class="btn btn-secondary rounded-pill text-white p-0" href="#">Read More <i class="fa fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.3s">
+                        <div class="training-item">
+                            <div class="training-inner">
+                                <img src="img/training-2.jpg" class="img-fluid w-100 rounded" alt="Image">
+                                <div class="training-title-name">
+                                    <a href="#" class="h4 text-white mb-0">TOEFL</a>
+                                    <a href="#" class="h4 text-white mb-0">Coaching</a>
+                                </div>
+                            </div>
+                            <div class="training-content bg-secondary rounded-bottom p-4">
+                                <a href="#"><h4 class="text-white">TOEFL Coaching</h4></a>
+                                <p class="text-white-50">Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem, veritatis.</p>
+                                <a class="btn btn-secondary rounded-pill text-white p-0" href="#">Read More <i class="fa fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="training-item">
+                            <div class="training-inner">
+                                <img src="img/car-rent-1.png" class="img-fluid w-100 rounded" alt="Image">
+                                <div class="training-title-name">
+                                    <a href="#" class="h4 text-white mb-0">IELTS</a>
+                                </div>
+                            </div>
+                            <div class="training-content bg-secondary rounded-bottom p-4">
+                                <a href="#"><h5 class="text-white">IELTS Coaching</h5></a>
                                 <p class="text-white-50">Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem, veritatis.</p>
                                 <a class="btn btn-secondary rounded-pill text-white p-0" href="#">Read More <i class="fa fa-arrow-right"></i></a>
                             </div>
@@ -634,79 +687,11 @@ $vehicules =$vehicule->readAll();
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- Training End -->
 
 
-        <!-- Contact Start -->
-        <!-- <div class="container-fluid contact overflow-hidden pb-5">
-            <div class="container py-5">
-                <div class="office pt-5">
-                    <div class="section-title text-center mb-5 wow fadeInUp" data-wow-delay="0.1s">
-                        <div class="sub-style">
-                            <h5 class="sub-title text-primary px-3">Worlwide Offices</h5>
-                        </div>
-                        <h1 class="display-5 mb-4">Explore Our Office Worldwide</h1>
-                        <p class="mb-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quaerat deleniti amet at atque sequi quibusdam cumque itaque repudiandae temporibus, eius nam mollitia voluptas maxime veniam necessitatibus saepe in ab? Repellat!</p>
-                    </div>
-                    <div class="row g-4 justify-content-center">
-                        <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="office-item p-4">
-                                <div class="office-img mb-4">
-                                    <img src="img/office-2.jpg" class="img-fluid w-100 rounded" alt="">
-                                </div>
-                                <div class="office-content d-flex flex-column">
-                                    <h4 class="mb-2">Australia</h4>
-                                    <a href="#" class="text-secondary fs-5 mb-2">+123.456.7890</a>
-                                    <a href="#" class="text-muted fs-5 mb-2">travisa@example.com</a>
-                                    <p class="mb-0">123, First Floor, 123 St Roots Terrace, Los Angeles 90010 Unitd States of America.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.3s">
-                            <div class="office-item p-4">
-                                <div class="office-img mb-4">
-                                    <img src="img/office-1.jpg" class="img-fluid w-100 rounded" alt="">
-                                </div>
-                                <div class="office-content d-flex flex-column">
-                                    <h4 class="mb-2">Canada</h4>
-                                    <a href="#" class="text-secondary fs-5 mb-2">(012) 0345 6789</a>
-                                    <a href="#" class="text-muted fs-5 mb-2">travisa@example.com</a>
-                                    <p class="mb-0">123, First Floor, 123 St Roots Terrace, Los Angeles 90010 Unitd States of America.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.5s">
-                            <div class="office-item p-4">
-                                <div class="office-img mb-4">
-                                    <img src="img/office-3.jpg" class="img-fluid w-100 rounded" alt="">
-                                </div>
-                                <div class="office-content d-flex flex-column">
-                                    <h4 class="mb-2">United Kingdom</h4>
-                                    <a href="#" class="text-secondary fs-5 mb-2">01234.567.890</a>
-                                    <a href="#" class="text-muted fs-5 mb-2">travisa@example.com</a>
-                                    <p class="mb-0">123, First Floor, 123 St Roots Terrace, Los Angeles 90010 Unitd States of America.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-lg-6 col-xl-3 wow fadeInUp" data-wow-delay="0.7s">
-                            <div class="office-item p-4">
-                                <div class="office-img mb-4">
-                                    <img src="img/office-4.jpg" class="img-fluid w-100 rounded" alt="">
-                                </div>
-                                <div class="office-content d-flex flex-column">
-                                    <h4 class="mb-2">India</h4>
-                                    <a href="#" class="text-secondary fs-5 mb-2">+123.45.67890</a>
-                                    <a href="#" class="text-muted fs-5 mb-2">travisa@example.com</a>
-                                    <p class="mb-0">123, First Floor, 123 St Roots Terrace, Los Angeles 90010 Unitd States of America.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-        <!-- Contact End -->
+    
 
 
         <!-- Footer Start -->
@@ -822,6 +807,36 @@ function openReservationForm(carId) {
 function closeReservationForm() {
     // Hide the modal
     document.getElementById('reservationModal').style.display = 'none';
+}
+
+
+// update reservationn form is just like the ubove one
+
+function openUpdateReservationForm(id) {
+    fetch(`getReservationDate.php?id=${id}`)
+                .then((response) => response.json())
+                .then((reservation) => {
+                    console.log(reservation);
+
+                    document.getElementById('id_reservation').value = reservation.id_reservation;
+                    document.getElementById('U_id_vehicule').value = reservation.id_vehicule;
+                    document.getElementById('U_date_debut').value = reservation.date_debut;
+                    document.getElementById('U_date_fin').value = reservation.date_fin;
+                    document.getElementById('U_lieu_prise_en_charge').value = reservation.lieu_prise_en_charge;
+                    document.getElementById('updateReservationModal').style.display = 'flex';
+
+                })
+                .catch((error) => {
+                    console.error("Error fetching category data:", error);
+                });
+    
+
+}
+
+// Function to close the reservation form modal
+function closeUpdateReservationForm() {
+    // Hide the modal
+    document.getElementById('updateReservationModal').style.display = 'none';
 }
 
     </script>

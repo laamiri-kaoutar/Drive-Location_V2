@@ -562,4 +562,6 @@ $vehicules =$vehicule->readAll();
     </script>
 </body>
 
+
+
 </html>

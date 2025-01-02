@@ -6,18 +6,20 @@ session_start();
 
 
          $vehicule=$_POST["id_vehicule"];
+         $id = $_POST["id_reservation"];
          $user= $_SESSION["user"]["id"];
          $date_debut = $_POST["date_debut"]; 
          $date_fin=$_POST["date_fin"] ; 
          $lieu = $_POST["lieu_prise_en_charge"] ;
-         var_dump($user, $vehicule , $date_debut, $date_fin , $lieu );
+         var_dump($id,$user, $vehicule , $date_debut, $date_fin , $lieu );
 
 
 
          $reservation = new Reservation();
-         if ($reservation->create($user, $vehicule , $date_debut, $date_fin , $lieu )) {
+         if ($reservation->update($id, $user, $vehicule , $date_debut, $date_fin , $lieu )) {
             echo "this is wooooorkinggg";
             header('Location: ../View/index.php');     
+
 
         }
        

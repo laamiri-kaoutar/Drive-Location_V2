@@ -35,11 +35,11 @@ class Reservation extends GestionBaseDeDonnees {
         return  $this->execute($query, $params);
     }
 
-    // public function getElementByEmail(){
-    //     $query = "SELECT * FROM reservation WHERE email = ? ";
-    //     $params = [$this->email];
-    //     return  $this->select($query , $params);
-    // }
+    public function getElementById($id){
+        $query = "SELECT * FROM reservation WHERE id_reservation = ? ";
+        $params = [$id];
+        return  $this->select($query , $params);
+    }
 
     public function deleteById($id){
         $query = "DELETE FROM  reservation  WHERE id_reservation = ?";
