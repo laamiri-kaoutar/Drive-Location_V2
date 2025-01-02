@@ -4,6 +4,9 @@ session_start();
 require_once '../Model/Vehicule.php';
 require_once '../Model/Reservation.php';
 require_once '../Model/Avis.php';
+require_once '../Model/categorie.php';
+$categorie = new Categorie();
+$categories =$categorie->readAll();
 
 
 
@@ -160,7 +163,7 @@ $aviss = $avis->readByUser($user);
                         <a href="index.html" class="nav-item nav-link active">Home</a>
                         <a href="about.html" class="nav-item nav-link">About</a>
                         <a href="service.html" class="nav-item nav-link">Service</a>
-                        <div class="nav-item dropdown">
+                        <!-- <div class="nav-item dropdown">
                             <a href="#" class="nav-link" data-bs-toggle="dropdown"><span class="dropdown-toggle">Pages</span></a>
                             <div class="dropdown-menu m-0">
                                 <a href="#" class="dropdown-item" >Feature</a>
@@ -168,6 +171,18 @@ $aviss = $avis->readByUser($user);
                                 <a href="testimonial.html" class="dropdown-item">Testimonial</a>
                                 <a href="training.html" class="dropdown-item">Training</a>
                                 <a href="404.html" class="dropdown-item">404 Page</a>
+                            </div>
+                        </div> -->
+
+                        <div class="nav-item dropdown">
+                            <a href="#" class="nav-link" data-bs-toggle="dropdown"><span class="dropdown-toggle">Filter by Category</span></a>
+                            <div class="dropdown-menu m-0" id="categoryDropdown">
+                                <a class="dropdown-item" onclick="filterByCategory('All')">All</a>
+                                <?php foreach ($categories as $category) { ?>
+                                    <a  class="dropdown-item" onclick="filterByCategory('<?= $category['nom_categorie']; ?>')">
+                                        <?= $category['nom_categorie']; ?>
+                                    </a>
+                                <?php } ?>
                             </div>
                         </div>
                         <a href="contact.html" class="nav-item nav-link">Contact</a>
@@ -257,7 +272,7 @@ $aviss = $avis->readByUser($user);
                     <h1 class="display-5 mb-4">Find the Perfect Car for Your Needs</h1>
                     <p class="mb-0">Explore our wide range of vehicles, from economy to luxury models. Use the filters and pagination to find your ideal car.</p>
                 </div>
-                <div class="row g-4">
+                <div class="row g-4" id="cars_container">
                      <?php foreach ($vehicules as $vehicule) { ?>
                         <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
                             <div class="service-item">
@@ -270,7 +285,7 @@ $aviss = $avis->readByUser($user);
                                             <div class="bg-primary text-center rounded p-3 mx-5 mb-4">
                                                 <a href="#" class="h4 text-white mb-0"><?= $vehicule['marque'] ?></a>
                                             </div>
-                                            <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="openReservationForm(<?= $vehicule['id_vehicule'] ?>)">Explore More</a>
+                                            <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="openReservationForm(<?= $vehicule['id_vehicule'] ?>)">Booking</a>
                                         </div>
                                         <div class="service-content pb-4">
                                             <a href="#"><h5 class="text-white mb-4 py-3"><?= $vehicule['marque'] ?>  <?= $vehicule['modele'] ?>  </h5></a>
@@ -281,7 +296,7 @@ $aviss = $avis->readByUser($user);
                                                     <strong>Availability : </strong> <?= $vehicule['disponibilite'] ? 'Available' : 'Not Available' ?><br>
                                                     <?= $vehicule['description'] ?>
                                                 </p>
-                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(<?= $vehicule['id_vehicule'] ?>)" >Explore More</a>
+                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(<?= $vehicule['id_vehicule'] ?>)" >Booking</a>
                                                 <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="showAvisForm(<?= $vehicule['id_vehicule'] ?>)" >avis</a>
 
                                             </div>
@@ -756,14 +771,77 @@ function closeUpdateReservationForm() {
                     console.error("Error fetching category data:", error);
                 });
 
-
-
     }
 
     // Close the modal
     function closeUpdateAvisForm() {
         document.getElementById("updateAvisModal").style.display = "none";
     }
+
+    //  function to fetch and display the filtred data 
+    const cars_container = document.getElementById('cars_container');
+    console.log(cars_container);
+    
+    
+    function filterByCategory(category) {
+
+        fetch(`getVehiculeData.php?category=${category}`)
+                .then((response) => response.json())
+                .then((cars) => {
+                    cars_container.innerHTML="";
+
+                    console.log(cars);
+                    cars.forEach(car => {
+                        console.log(car);
+                        
+
+                        cars_container.innerHTML +=`
+                                       <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="service-item">
+                                <div class="service-inner">
+                                    <div class="service-img">
+                                        <img src="./img/${car.image}" class="img-fluid w-100 rounded" alt="Image">
+                                    </div>
+                                    <div class="service-title">
+                                        <div class="service-title-name">
+                                            <div class="bg-primary text-center rounded p-3 mx-5 mb-4">
+                                                <a href="#" class="h4 text-white mb-0">${car.marque}</a>
+                                            </div>
+                                            <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="openReservationForm(${car.id_vehicule})">Booking</a>
+                                        </div>
+                                        <div class="service-content pb-4">
+                                            <a href="#"><h5 class="text-white mb-4 py-3">${car.marque}  ${car.modele}  </h5></a>
+                                            <div class="px-4">
+                                                <p class="mb-4">
+                                                    <strong>Category : </strong> ${car.nom_categorie}<br>
+                                                    <strong>Price : </strong>$ ${car.prix_par_jour}/day<br>
+                                                    <strong>Availability : </strong> ${ car.disponibilite ? 'Available' : 'Not Available' }<br>
+                                                    ${car.description}
+                                                </p>
+                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(${car.id_vehicule})" >Booking</a>
+                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="showAvisForm(${car.id_vehicule})" >avis</a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        `;
+
+
+                        console.log(car.prix_par_jour);
+
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error fetching category data:", error);
+                });
+
+        
+    }
+    // displayFetchedData("Sports Car");
 
 
 
