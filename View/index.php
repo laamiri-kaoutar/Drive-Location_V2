@@ -134,6 +134,11 @@ $aviss = $avis->readByUser($user);
             background-color: #0056b3;
             border-color: #004085;
         }
+        .nav-link.dropdown-toggle,
+        .dropdown-item {
+            cursor: pointer;
+        }
+      
 
         </style>
     </head>
@@ -159,32 +164,46 @@ $aviss = $avis->readByUser($user);
                     <span class="fa fa-bars"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <div class="navbar-nav ms-auto py-0">
-                        <a href="index.html" class="nav-item nav-link active">Home</a>
-                        <a href="about.html" class="nav-item nav-link">About</a>
-                        <a href="service.html" class="nav-item nav-link">Service</a>
-                        <!-- <div class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-bs-toggle="dropdown"><span class="dropdown-toggle">Pages</span></a>
-                            <div class="dropdown-menu m-0">
-                            
-                        </div> -->
+                <button id="showAllButton" class="btn btn-secondary" onclick="filterByCategory('All')">Show All</button>
 
-                        <div class="nav-item dropdown">
-                            <a href="#" class="nav-link" data-bs-toggle="dropdown"><span class="dropdown-toggle">Filter by Category</span></a>
-                            <div class="dropdown-menu m-0" id="categoryDropdown">
-                                <a class="dropdown-item" onclick="filterByCategory('All')">All</a>
-                                <?php foreach ($categories as $category) { ?>
-                                    <a  class="dropdown-item" onclick="filterByCategory('<?= $category['nom_categorie']; ?>')">
-                                        <?= $category['nom_categorie']; ?>
-                                    </a>
-                                <?php } ?>
-                            </div>
-                        </div>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
-                    </div>
-                    <button class="btn btn-primary btn-md-square border-secondary mb-3 mb-md-3 mb-lg-0 me-3" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search"></i></button>
-                    <a href="" class="btn btn-primary border-secondary rounded-pill py-2 px-4 px-lg-3 mb-3 mb-md-3 mb-lg-0" >Get A Quote</a>
+                     <div class="navbar-nav ms-auto py-0 ">
+                         <!-- Search Bar -->
+                         <div class="d-flex align-items-center mb-3" style="gap: 10px;">
+                             <input 
+                                 type="text" 
+                                 class="form-control" 
+                                 placeholder="Rechercher un véhicule..." 
+                                 id="vehicleSearch" 
+                                 style="border-radius: 6px; max-width: 300px;"
+                             />
+                             <button 
+                                 class="btn btn-primary" 
+                                 onclick="search()" 
+                                 style="border-radius: 6px;"
+                             >
+                                 <i class="fa fa-search"></i>
+                             </button>
+                         </div>
+                         
+                         <!-- Dropdown Menu -->
+                         <div class="nav-item dropdown">
+                             <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                 Filter by Category
+                             </a>
+                             <div class="dropdown-menu p-3 shadow-sm" id="categoryDropdown" style="min-width: 250px;">
+                                 <a class="dropdown-item" onclick="filterByCategory('All')">All</a>
+                                 <div id="categoryList">
+                                     <?php foreach ($categories as $category) { ?>
+                                         <a class="dropdown-item" onclick="filterByCategory('<?= $category['nom_categorie']; ?>')">
+                                             <?= $category['nom_categorie']; ?>
+                                         </a>
+                                     <?php } ?>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
                 </div>
+
             </nav>
         </div>
         <!-- Navbar & Hero End -->
@@ -838,6 +857,69 @@ function closeUpdateReservationForm() {
     }
     // displayFetchedData("Sports Car");
 
+function searchVehicle(key) {
+
+        fetch(`getSearchData.php?key=${key}`)
+                .then((response) => response.json())
+                .then((cars) => {
+                    cars_container.innerHTML="";
+        
+                    console.log(cars);
+                    cars.forEach(car => {
+                        console.log(car);
+                        
+        
+                        cars_container.innerHTML +=`
+                                       <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="service-item">
+                                <div class="service-inner">
+                                    <div class="service-img">
+                                        <img src="./img/${car.image}" class="img-fluid w-100 rounded" alt="Image">
+                                    </div>
+                                    <div class="service-title">
+                                        <div class="service-title-name">
+                                            <div class="bg-primary text-center rounded p-3 mx-5 mb-4">
+                                                <a href="#" class="h4 text-white mb-0">${car.marque}</a>
+                                            </div>
+                                            <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="openReservationForm(${car.id_vehicule})">Booking</a>
+                                        </div>
+                                        <div class="service-content pb-4">
+                                            <a href="#"><h5 class="text-white mb-4 py-3">${car.marque}  ${car.modele}  </h5></a>
+                                            <div class="px-4">
+                                                <p class="mb-4">
+                                                    <strong>Category : </strong> ${car.nom_categorie}<br>
+                                                    <strong>Price : </strong>$ ${car.prix_par_jour}/day<br>
+                                                    <strong>Availability : </strong> ${ car.disponibilite ? 'Available' : 'Not Available' }<br>
+                                                    ${car.description}
+                                                </p>
+                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(${car.id_vehicule})" >Booking</a>
+                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="showAvisForm(${car.id_vehicule})" >avis</a>
+        
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        `;
+        
+        
+                        console.log(car.prix_par_jour);
+        
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error fetching category data:", error);
+                });
+}
+searchVehicle('BMW');
+
+
+function search() {
+    const key = document.getElementById('vehicleSearch').value;
+    searchVehicle(key);
+}
 
 
     </script>

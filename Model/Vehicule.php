@@ -24,6 +24,11 @@ class Vehicule extends GestionBaseDeDonnees {
         $params = [$id];
         return  $this->select($query , $params);
     }
+    public function search($key){
+        $query = "SELECT * FROM vehicule v JOIN categorie c ON c.id_categorie= v.id_categorie WHERE  v.marque = ? OR v.modele = ? OR v.prix_par_jour = ?";
+        $params = [$key, $key, $key];
+        return  $this->select($query , $params);
+    }
 
     public function getElementByCategory($category){
         $query = "SELECT * FROM vehicule v JOIN categorie c ON c.id_categorie= v.id_categorie WHERE  c.nom_categorie = ?";
