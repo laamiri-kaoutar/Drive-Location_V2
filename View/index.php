@@ -696,6 +696,11 @@ function openReservationForm(carId) {
     document.getElementById('reservationModal').style.display = 'flex';
 }
 
+// Function to close the reservation form modal
+function closeReservationForm() {
+    // Hide the modal
+    document.getElementById('reservationModal').style.display = 'none';
+}
 
 
 // update reservationn form is just like the ubove one
