@@ -11,6 +11,10 @@
 require_once '../Model/statistics.php';
 require_once '../Model/Vehicule.php';
 require_once '../Model/categorie.php';
+require_once '../Model/Reservation.php';
+require_once '../Model/Avis.php';
+
+
 $categorie = new Categorie();
 $categories =$categorie->readAll();
 
@@ -21,6 +25,12 @@ $vehicules =$vehicule->readAll();
 $statistics = new Statistics();
 $mostrented=$statistics->mostRented();
 $mostRated=$statistics->mostRated();
+
+$reservation = new Reservation();
+$reservations = $reservation->readAll();
+
+$avis = new Avis();
+$aviss = $avis->readAll();
 
 
 
@@ -130,21 +140,30 @@ $mostRated=$statistics->mostRated();
                 <table class="w-full border-collapse border border-gray-300">
                     <thead>
                         <tr class="bg-gray-100">
-                            <th class="border p-2">Reservation ID</th>
+                            <!-- <th class="border p-2">Reservation ID</th> -->
                             <th class="border p-2">Client Name</th>
                             <th class="border p-2">Vehicle</th>
-                            <th class="border p-2">Date</th>
+                            <th class="border p-2">Start Date</th>
+                            <th class="border p-2">End Date</th>
+                            <th class="border p-2">Location </th>
                             <th class="border p-2">Status</th>
                         </tr>
                     </thead>
                     <tbody>
+                        
+                    <?php foreach ($reservations as $reservation) { ?>
                         <tr class="hover:bg-gray-50">
-                            <td class="border p-2">101</td>
-                            <td class="border p-2">John Doe</td>
-                            <td class="border p-2">Toyota Corolla</td>
-                            <td class="border p-2">2024-12-15</td>
-                            <td class="border p-2">Confirmed</td>
-                        </tr>
+                            <td class="border p-2"><?= $reservation['username'] ?></td>
+                            <td class="border p-2"><?= $reservation['marque'] ?>  <?= $reservation['modele'] ?></td>
+                            <td class="border p-2"><?= $reservation['date_debut'] ?></td>
+                            <td class="border p-2"><?= $reservation['date_fin'] ?></td>
+                            <td class="border p-2"><?= $reservation['lieu_prise_en_charge'] ?></td>
+                            <td class="border p-2 <?= $reservation['status'] === 'pending' ? 'text-warning' : ($reservation['status'] === 'approved' ? 'text-success' : 'text-danger') ?>">
+                            <?= ucfirst($reservation['status']) ?></td>
+                            </tr>
+
+                    <?php } ?>
+
                     </tbody>
                 </table>
             </section>
@@ -425,6 +444,41 @@ $mostRated=$statistics->mostRated();
                     </tbody>
                 </table>
             </section>
+
+                  <!-- Reservations Section -->
+            <section id="avis" class="dashboard-section hidden bg-white shadow-lg rounded-lg p-6 mb-6">
+                <h2 class="text-2xl font-bold text-primary mb-4">Feed Backs</h2>
+                <table class="w-full border-collapse border border-gray-300">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="border p-2">Feed Back ID</th>
+                            <th class="border p-2">Client Name</th>
+                            <th class="border p-2">Vehicle</th>
+                            <th class="border p-2">Note</th>
+                            <th class="border p-2">Commentaire</th>
+                            <th class="border p-2">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                <?php foreach ($aviss as $opinion) { ?>
+
+                        <tr class="hover:bg-gray-50">
+                            <td class="border p-2"><?= $opinion['id_avis'] ?></td>
+                            <td class="border p-2"><?= $opinion['username'] ?></td>
+                            <td class="border p-2"><?= $opinion['marque'] ?>  <?= $opinion['modele'] ?></td>
+                            <td class="border p-2"><?= $opinion['note'] ?></td>
+                            <td class="border p-2"><?= $opinion['commentaire'] ?></td>
+                            <td class="border p-2"><?= $opinion['date'] ?></td>
+
+                        </tr>
+                <?php } ?>                   
+
+                    </tbody>
+                </table>
+            </section>
+
+
+
 
             <!-- Statistiques Section -->
             <section id="statistiques" class="dashboard-section hidden bg-white shadow-lg rounded-lg p-6 mb-6">

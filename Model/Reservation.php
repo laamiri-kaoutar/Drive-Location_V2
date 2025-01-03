@@ -53,7 +53,7 @@ class Reservation extends GestionBaseDeDonnees {
 
     public function readAll(){
         $query = "SELECT * FROM reservation r JOIN vehicule v ON v.id_vehicule = r.id_vehicule  JOIN utilisateur u ON u.user_id = r.user_id ";
-        return  $this->select($query , $params);
+        return  $this->select($query);
     }
 
     public function readByUser($id){

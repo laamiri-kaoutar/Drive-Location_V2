@@ -38,7 +38,7 @@ class Avis extends GestionBaseDeDonnees {
 
     public function readAll(){
         $query = "SELECT * FROM avis a JOIN vehicule v ON v.id_vehicule = a.id_vehicule  JOIN utilisateur u ON u.user_id = a.user_id ";
-        return  $this->select($query , $params);
+        return  $this->select($query);
     }
 
     public function readByUser($id){
