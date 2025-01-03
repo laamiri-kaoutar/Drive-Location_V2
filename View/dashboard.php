@@ -24,8 +24,6 @@ $mostRated=$statistics->mostRated();
 
 
 
-// var_dump($statistics->available());
-
 // var_dump($statistics->mostRented());
 // var_dump($statistics->mostRated());
 
