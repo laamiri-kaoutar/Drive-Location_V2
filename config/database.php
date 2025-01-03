@@ -3,7 +3,7 @@
 class GestionBaseDeDonnees {
 
 
-    private $pdo;
+    protected $pdo;
     private $host = "localhost";
     private $db_name = "drive_location"; 
     private $username = "root"; 

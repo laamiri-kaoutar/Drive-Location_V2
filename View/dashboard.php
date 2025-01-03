@@ -1,4 +1,14 @@
 <?php
+   session_start();
+
+
+   // if (isset($_SESSION["user"])) {
+   //     $user=$_SESSION["user"];
+   //     var_dump($user);
+   // }else {
+   //     header("Location:./authen.php");
+   // }
+require_once '../Model/statistics.php';
 require_once '../Model/Vehicule.php';
 require_once '../Model/categorie.php';
 $categorie = new Categorie();
@@ -7,14 +17,24 @@ $categories =$categorie->readAll();
 $vehicule = new Vehicule();
 
 $vehicules =$vehicule->readAll();
-// foreach ($vehicules as $vehicule) {
-// echo " <tr><td><br><br></td></tr>";
-// echo $vehicule["nom_categorie"];
-// echo " <tr><td><br><br></td></tr>";
 
-// echo $vehicule["disponibilite"];
+$statistics = new Statistics();
+$mostrented=$statistics->mostRented();
+$mostRated=$statistics->mostRated();
 
-// }
+// echo"<br>";
+// var_dump($statistics->totalFeedback());
+
+
+// var_dump($statistics->available());
+
+// var_dump($statistics->mostRented());
+// var_dump($statistics->mostRated());
+
+
+// var_dump($statistics->approved());
+// var_dump($statistics->avrFeedback());
+
 
 ?>
 
@@ -425,23 +445,56 @@ $vehicules =$vehicule->readAll();
                     <!-- Card 1 -->
                     <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center">
                         <h3 class="text-xl font-semibold text-primary">Total Reservations</h3>
-                        <p class="text-3xl font-bold mt-2">1,245</p>
+                        <p class="text-3xl font-bold mt-2"><?= $statistics->approved() ?></p>
+                        <p class="text-sm text-gray-500 mt-1">Approved</p>
+                    </div>
+
+                    <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center">
+                        <h3 class="text-xl font-semibold text-primary">Total Feedback</h3>
+                        <p class="text-3xl font-bold mt-2"><?= $statistics->totalFeedback() ?></p>
                         <p class="text-sm text-gray-500 mt-1">This Year</p>
+                    </div>
+
+                    <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center">
+                        <h3 class="text-xl font-semibold text-primary">Average rating</h3>
+                        <p class="text-3xl font-bold mt-2"><?= $statistics->avrFeedback() ?></p>
+                        <p class="text-sm text-gray-500 mt-1">of vehicles</p>
+                    </div>
+
+                    <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center">
+                        <h3 class="text-xl font-semibold text-primary">Total Vehicles</h3>
+                        <p class="text-3xl font-bold mt-2"><?= $statistics->available() ?></p>
+                        <p class="text-sm text-gray-500 mt-1">Available for Rent</p>
                     </div>
 
                     <!-- Card 2 -->
                     <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center">
-                        <h3 class="text-xl font-semibold text-primary">Total Vehicles</h3>
-                        <p class="text-3xl font-bold mt-2">85</p>
-                        <p class="text-sm text-gray-500 mt-1">Available for Rent</p>
+                        <h3 class="text-xl font-semibold text-primary">Most Rented Vehicle</h3>
+                        <p  class="text-sm text-gray-500 mt-1">
+                            <strong class=" font-bold">Category : </strong> <?= $mostrented['nom_categorie'] ?><br>
+                            <strong class=" font-bold">marque : </strong> <?= $mostrented['marque']  ?><br>
+                            <strong class=" font-bold">modele : </strong> <?= $mostrented['modele']  ?><br>
+                            <strong class=" font-bold">Price : </strong>$<?= $mostrented['prix_par_jour'] ?>/day<br>
+                            
+
+                        </p>
+                        <!-- <p class="text-sm text-gray-500 mt-1">Available for Rent</p> -->
                     </div>
 
-                    <!-- Card 3 -->
                     <div class="bg-gray-100 p-6 rounded-lg shadow-md text-center">
-                        <h3 class="text-xl font-semibold text-primary">Total Clients</h3>
-                        <p class="text-3xl font-bold mt-2">320</p>
-                        <p class="text-sm text-gray-500 mt-1">Active Clients</p>
+                        <h3 class="text-xl font-semibold text-primary">Most Rated Vehicle</h3>
+                        <p  class="text-sm text-gray-500 mt-1">
+                            <strong class=" font-bold">Category : </strong> <?= $mostRated['nom_categorie'] ?><br>
+                            <strong class=" font-bold">marque : </strong> <?= $mostRated['marque']  ?><br>
+                            <strong class=" font-bold">modele : </strong> <?= $mostRated['modele']  ?><br>
+                            <strong class=" font-bold">Price : </strong>$<?= $mostRated['prix_par_jour'] ?>/day<br>
+                            
+
+                        </p>
+                        </p>
+                        <!-- <p class="text-sm text-gray-500 mt-1">Available for Rent</p> -->
                     </div>
+
                 </div>
             </section>
         </main>

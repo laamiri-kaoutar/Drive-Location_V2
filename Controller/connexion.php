@@ -45,10 +45,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 
             if ($data['role'] === 'admin') {
-                header("Location:../View/index.html");
+                header("Location:../View/dashboard.php");
 
             }elseif ($data['role'] === 'client') {
-                header("Location:../View/index.html");
+                header("Location:../View/index.php");
             }
          }
 

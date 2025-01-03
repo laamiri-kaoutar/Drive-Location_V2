@@ -1,12 +1,32 @@
 <?php
-session_start();
+    session_start();
+
+
+    // if (isset($_SESSION["user"])) {
+    //     $user=$_SESSION["user"];
+    //     var_dump($user);
+    // }else {
+    //     header("Location:./authen.php");
+    // }
+
 
 require_once '../Model/Vehicule.php';
 require_once '../Model/Reservation.php';
 require_once '../Model/Avis.php';
 require_once '../Model/categorie.php';
+require_once '../Controller/pagination.php';
+
 $categorie = new Categorie();
 $categories =$categorie->readAll();
+
+$pagination = new pagination();
+// var_dump($pagination-> getNbr_pages());
+$n =$pagination-> getNbr_pages();
+// if ( $n >=1) {
+//     for ($i=0; $i <$n ; $i++) { 
+//        echo "$i this is me pagination";       
+//     }
+// }
 
 
 
@@ -138,6 +158,30 @@ $aviss = $avis->readByUser($user);
         .dropdown-item {
             cursor: pointer;
         }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .page-link {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 0 5px;
+            text-decoration: none;
+            color: #003A66;
+            background-color: #E02454;
+            border-radius: 5px;
+            border: 1px solid #E02454;
+            transition: background-color 0.3s;
+        }
+        
+        .page-link:hover {
+            background-color: #003A66;
+            color: #fff;
+        }
+       
       
 
         </style>
@@ -311,7 +355,9 @@ $aviss = $avis->readByUser($user);
                                                     <?= $vehicule['description'] ?>
                                                 </p>
                                                 <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(<?= $vehicule['id_vehicule'] ?>)" >Booking</a>
-                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="showAvisForm(<?= $vehicule['id_vehicule'] ?>)" >avis</a>
+                                                <button id="showAllButton" class="btn btn-secondary" onclick="filterByCategory('All')">Show All</button>
+
+                                                <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="showAvisForm(<?= $vehicule['id_vehicule'] ?>)" >share your </a>
 
                                             </div>
                                         </div>
@@ -322,6 +368,15 @@ $aviss = $avis->readByUser($user);
                      <?php } ?>
 
                 </div>
+
+                <div class="pagination">
+                    <?php if ( $n >=1) {
+                        for ($i=0; $i <$n ; $i++) { ?>
+                            <a  class="page-link" onclick="goToPage(<?=($i+1)?>)"><?=($i+1)?></a>
+                    <?php  }
+                    } ?>
+                </div>
+
             </div>
         </div>
         <!-- Vehicules End -->
@@ -707,221 +762,282 @@ $aviss = $avis->readByUser($user);
     <script src="js/main.js"></script>
     <script>
         // Function to open the reservation form modal
-function openReservationForm(carId) {
-    // Set the hidden input value to the car ID
-    document.getElementById('id_vehicule').value = carId;
-
-    // Display the modal
-    document.getElementById('reservationModal').style.display = 'flex';
-}
-
-// Function to close the reservation form modal
-function closeReservationForm() {
-    // Hide the modal
-    document.getElementById('reservationModal').style.display = 'none';
-}
-
-
-// update reservationn form is just like the ubove one
-
-function openUpdateReservationForm(id) {
-    fetch(`getReservationDate.php?id=${id}`)
-                .then((response) => response.json())
-                .then((reservation) => {
-                    console.log(reservation);
-
-                    document.getElementById('id_reservation').value = reservation.id_reservation;
-                    document.getElementById('U_id_vehicule').value = reservation.id_vehicule;
-                    document.getElementById('U_date_debut').value = reservation.date_debut;
-                    document.getElementById('U_date_fin').value = reservation.date_fin;
-                    document.getElementById('U_lieu_prise_en_charge').value = reservation.lieu_prise_en_charge;
-                    document.getElementById('updateReservationModal').style.display = 'flex';
-
-                })
-                .catch((error) => {
-                    console.error("Error fetching category data:", error);
-                });
-    
-
-}
-
-// Function to close the reservation form modal
-function closeUpdateReservationForm() {
-    // Hide the modal
-    document.getElementById('updateReservationModal').style.display = 'none';
-}
-
-    // Show the modal
-    function showAvisForm(id) {
-        document.getElementById('id_vehiculeV').value = id;
-        document.getElementById("avisModal").style.display = "flex";
-    }
-
-    // Close the modal
-    function closeAvisForm() {
-        document.getElementById("avisModal").style.display = "none";
-    }
-
-    // Close modal if clicked outside of the modal content
-    window.onclick = function(event) {
-        if (event.target == document.getElementById("avisModal")) {
-            closeAvisForm();
+        function openReservationForm(carId) {
+            // Set the hidden input value to the car ID
+            document.getElementById('id_vehicule').value = carId;
+        
+            // Display the modal
+            document.getElementById('reservationModal').style.display = 'flex';
         }
-    }
+        
+        // Function to close the reservation form modal
+        function closeReservationForm() {
+            // Hide the modal
+            document.getElementById('reservationModal').style.display = 'none';
+        }
+        
+        
+        // update reservationn form is just like the ubove one
+        
+        function openUpdateReservationForm(id) {
+            fetch(`getReservationDate.php?id=${id}`)
+                        .then((response) => response.json())
+                        .then((reservation) => {
+                            console.log(reservation);
+        
+                            document.getElementById('id_reservation').value = reservation.id_reservation;
+                            document.getElementById('U_id_vehicule').value = reservation.id_vehicule;
+                            document.getElementById('U_date_debut').value = reservation.date_debut;
+                            document.getElementById('U_date_fin').value = reservation.date_fin;
+                            document.getElementById('U_lieu_prise_en_charge').value = reservation.lieu_prise_en_charge;
+                            document.getElementById('updateReservationModal').style.display = 'flex';
+        
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching category data:", error);
+                        });
+            
+        
+        }
+        
+        // Function to close the reservation form modal
+        function closeUpdateReservationForm() {
+            // Hide the modal
+            document.getElementById('updateReservationModal').style.display = 'none';
+        }
+        
+        // Show the modal
+        function showAvisForm(id) {
+            document.getElementById('id_vehiculeV').value = id;
+            document.getElementById("avisModal").style.display = "flex";
+        }
+    
+        // Close the modal
+        function closeAvisForm() {
+            document.getElementById("avisModal").style.display = "none";
+        }
 
-    function openUpdateAvisForm(id) {
-        fetch(`getAvisData.php?id=${id}`)
-                .then((response) => response.json())
-                .then((avis) => {
-                    console.log(avis);
+        // Close modal if clicked outside of the modal content
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("avisModal")) {
+                closeAvisForm();
+            }
+        }
+    
+        function openUpdateAvisForm(id) {
+            fetch(`getAvisData.php?id=${id}`)
+                    .then((response) => response.json())
+                    .then((avis) => {
+                        console.log(avis);
+    
+                        document.getElementById('commentaireU').value = avis.commentaire;
+                        document.getElementById('noteU').value = avis.note;
+                        document.getElementById('id_vehiculeU').value = avis.id_vehicule;
+                        document.getElementById('id_avis').value = avis.id_avis;
+                        document.getElementById("updateAvisModal").style.display = "flex";
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching category data:", error);
+                    });
+    
+        }
 
-                    document.getElementById('commentaireU').value = avis.commentaire;
-                    document.getElementById('noteU').value = avis.note;
-                    document.getElementById('id_vehiculeU').value = avis.id_vehicule;
-                    document.getElementById('id_avis').value = avis.id_avis;
-                    document.getElementById("updateAvisModal").style.display = "flex";
-                })
-                .catch((error) => {
-                    console.error("Error fetching category data:", error);
-                });
-
-    }
-
-    // Close the modal
-    function closeUpdateAvisForm() {
-        document.getElementById("updateAvisModal").style.display = "none";
-    }
-
-    //  function to fetch and display the filtred data 
-    const cars_container = document.getElementById('cars_container');
-    console.log(cars_container);
+        // Close the modal
+        function closeUpdateAvisForm() {
+            document.getElementById("updateAvisModal").style.display = "none";
+        }
+    
+        //  function to fetch and display the filtred data 
+        const cars_container = document.getElementById('cars_container');
+        // console.log(cars_container);
     
     
-    function filterByCategory(category) {
-
-        fetch(`getVehiculeData.php?category=${category}`)
-                .then((response) => response.json())
-                .then((cars) => {
-                    cars_container.innerHTML="";
-
-                    console.log(cars);
-                    cars.forEach(car => {
-                        console.log(car);
-                        
-
-                        cars_container.innerHTML +=`
-                                       <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="service-item">
-                                <div class="service-inner">
-                                    <div class="service-img">
-                                        <img src="./img/${car.image}" class="img-fluid w-100 rounded" alt="Image">
-                                    </div>
-                                    <div class="service-title">
-                                        <div class="service-title-name">
-                                            <div class="bg-primary text-center rounded p-3 mx-5 mb-4">
-                                                <a href="#" class="h4 text-white mb-0">${car.marque}</a>
-                                            </div>
-                                            <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="openReservationForm(${car.id_vehicule})">Booking</a>
+        function filterByCategory(category) {
+    
+            fetch(`getVehiculeData.php?category=${category}`)
+                    .then((response) => response.json())
+                    .then((cars) => {
+                        cars_container.innerHTML="";
+    
+                        console.log(cars);
+                        cars.forEach(car => {
+                            console.log(car);
+                            
+    
+                            cars_container.innerHTML +=`
+                                           <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
+                                <div class="service-item">
+                                    <div class="service-inner">
+                                        <div class="service-img">
+                                            <img src="./img/${car.image}" class="img-fluid w-100 rounded" alt="Image">
                                         </div>
-                                        <div class="service-content pb-4">
-                                            <a href="#"><h5 class="text-white mb-4 py-3">${car.marque}  ${car.modele}  </h5></a>
-                                            <div class="px-4">
-                                                <p class="mb-4">
-                                                    <strong>Category : </strong> ${car.nom_categorie}<br>
-                                                    <strong>Price : </strong>$ ${car.prix_par_jour}/day<br>
-                                                    <strong>Availability : </strong> ${ car.disponibilite ? 'Available' : 'Not Available' }<br>
-                                                    ${car.description}
-                                                </p>
-                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(${car.id_vehicule})" >Booking</a>
-                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="showAvisForm(${car.id_vehicule})" >avis</a>
-
+                                        <div class="service-title">
+                                            <div class="service-title-name">
+                                                <div class="bg-primary text-center rounded p-3 mx-5 mb-4">
+                                                    <a href="#" class="h4 text-white mb-0">${car.marque}</a>
+                                                </div>
+                                                <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="openReservationForm(${car.id_vehicule})">Booking</a>
+                                            </div>
+                                            <div class="service-content pb-4">
+                                                <a href="#"><h5 class="text-white mb-4 py-3">${car.marque}  ${car.modele}  </h5></a>
+                                                <div class="px-4">
+                                                    <p class="mb-4">
+                                                        <strong>Category : </strong> ${car.nom_categorie}<br>
+                                                        <strong>Price : </strong>$ ${car.prix_par_jour}/day<br>
+                                                        <strong>Availability : </strong> ${ car.disponibilite ? 'Available' : 'Not Available' }<br>
+                                                        ${car.description}
+                                                    </p>
+                                                    <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(${car.id_vehicule})" >Booking</a>
+                                                    <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="showAvisForm(${car.id_vehicule})" >share opinion </a>
+    
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        `;
-
-
-                        console.log(car.prix_par_jour);
-
+    
+                            `;
+    
+    
+                            console.log(car.prix_par_jour);
+    
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching category data:", error);
                     });
-                })
-                .catch((error) => {
-                    console.error("Error fetching category data:", error);
-                });
+    
+            
+        }
+        // displayFetchedData("Sports Car");
 
+        function searchVehicle(key) {
         
-    }
-    // displayFetchedData("Sports Car");
-
-function searchVehicle(key) {
-
-        fetch(`getSearchData.php?key=${key}`)
-                .then((response) => response.json())
-                .then((cars) => {
-                    cars_container.innerHTML="";
-        
-                    console.log(cars);
-                    cars.forEach(car => {
-                        console.log(car);
-                        
-        
-                        cars_container.innerHTML +=`
-                                       <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="service-item">
-                                <div class="service-inner">
-                                    <div class="service-img">
-                                        <img src="./img/${car.image}" class="img-fluid w-100 rounded" alt="Image">
-                                    </div>
-                                    <div class="service-title">
-                                        <div class="service-title-name">
-                                            <div class="bg-primary text-center rounded p-3 mx-5 mb-4">
-                                                <a href="#" class="h4 text-white mb-0">${car.marque}</a>
+                fetch(`getSearchData.php?key=${key}`)
+                        .then((response) => response.json())
+                        .then((cars) => {
+                            cars_container.innerHTML="";
+                
+                            console.log(cars);
+                            cars.forEach(car => {
+                                console.log(car);
+                                
+                
+                                cars_container.innerHTML +=`
+                                               <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
+                                    <div class="service-item">
+                                        <div class="service-inner">
+                                            <div class="service-img">
+                                                <img src="./img/${car.image}" class="img-fluid w-100 rounded" alt="Image">
                                             </div>
-                                            <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="openReservationForm(${car.id_vehicule})">Booking</a>
+                                            <div class="service-title">
+                                                <div class="service-title-name">
+                                                    <div class="bg-primary text-center rounded p-3 mx-5 mb-4">
+                                                        <a href="#" class="h4 text-white mb-0">${car.marque}</a>
+                                                    </div>
+                                                    <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="openReservationForm(${car.id_vehicule})">Booking</a>
+                                                </div>
+                                                <div class="service-content pb-4">
+                                                    <a href="#"><h5 class="text-white mb-4 py-3">${car.marque}  ${car.modele}  </h5></a>
+                                                    <div class="px-4">
+                                                        <p class="mb-4">
+                                                            <strong>Category : </strong> ${car.nom_categorie}<br>
+                                                            <strong>Price : </strong>$ ${car.prix_par_jour}/day<br>
+                                                            <strong>Availability : </strong> ${ car.disponibilite ? 'Available' : 'Not Available' }<br>
+                                                            ${car.description}
+                                                        </p>
+                                                        <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(${car.id_vehicule})" >Booking</a>
+                                                                                                            <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="showAvisForm(${car.id_vehicule})" >share opinion </a>
+
+                
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="service-content pb-4">
-                                            <a href="#"><h5 class="text-white mb-4 py-3">${car.marque}  ${car.modele}  </h5></a>
-                                            <div class="px-4">
-                                                <p class="mb-4">
-                                                    <strong>Category : </strong> ${car.nom_categorie}<br>
-                                                    <strong>Price : </strong>$ ${car.prix_par_jour}/day<br>
-                                                    <strong>Availability : </strong> ${ car.disponibilite ? 'Available' : 'Not Available' }<br>
-                                                    ${car.description}
-                                                </p>
-                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(${car.id_vehicule})" >Booking</a>
-                                                <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="showAvisForm(${car.id_vehicule})" >avis</a>
-        
+                                    </div>
+                                </div>
+                
+                                `;
+                
+                
+                                console.log(car.prix_par_jour);
+                
+                            });
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching category data:", error);
+                        });
+        }
+        // searchVehicle('BMW');
+    
+    
+        function search() {
+            const key = document.getElementById('vehicleSearch').value;
+            searchVehicle(key);
+        }
+    
+        function goToPage(page) {
+            
+            fetch(`getPagination.php?page=${page}`)
+                    .then((response) => response.json())
+                    .then((cars) => {
+                        cars_container.innerHTML="";
+            
+                        console.log(cars);
+                        cars.forEach(car => {
+                            console.log(car);
+                            
+            
+                            cars_container.innerHTML +=`
+                                           <div class="col-lg-6 col-xl-4 wow fadeInUp" data-wow-delay="0.1s">
+                                <div class="service-item">
+                                    <div class="service-inner">
+                                        <div class="service-img">
+                                            <img src="./img/${car.image}" class="img-fluid w-100 rounded" alt="Image">
+                                        </div>
+                                        <div class="service-title">
+                                            <div class="service-title-name">
+                                                <div class="bg-primary text-center rounded p-3 mx-5 mb-4">
+                                                    <a href="#" class="h4 text-white mb-0">${car.marque}</a>
+                                                </div>
+                                                <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="openReservationForm(${car.id_vehicule})">Booking</a>
+                                            </div>
+                                            <div class="service-content pb-4">
+                                                <a href="#"><h5 class="text-white mb-4 py-3">${car.marque}  ${car.modele}  </h5></a>
+                                                <div class="px-4">
+                                                    <p class="mb-4">
+                                                        <strong>Category : </strong> ${car.nom_categorie}<br>
+                                                        <strong>Price : </strong>$ ${car.prix_par_jour}/day<br>
+                                                        <strong>Availability : </strong> ${ car.disponibilite ? 'Available' : 'Not Available' }<br>
+                                                        ${car.description}
+                                                    </p>
+                                                    <a class="btn btn-primary border-secondary rounded-pill py-3 px-5" onclick="openReservationForm(${car.id_vehicule})" >Booking</a>
+                                                    <a class="btn bg-light text-secondary rounded-pill py-3 px-5 mb-4" onclick="showAvisForm(${car.id_vehicule})" >share opinion </a>
+
+            
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-        
-                        `;
-        
-        
-                        console.log(car.prix_par_jour);
-        
+            
+                            `;
+            
+            
+                            console.log(car.prix_par_jour);
+               
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching category data:", error);
                     });
-                })
-                .catch((error) => {
-                    console.error("Error fetching category data:", error);
-                });
-}
-searchVehicle('BMW');
+        }  
 
-
-function search() {
-    const key = document.getElementById('vehicleSearch').value;
-    searchVehicle(key);
-}
-
-
+        goToPage(1);
+            
+        
     </script>
     
     </body>

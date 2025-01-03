@@ -37,7 +37,7 @@ class Vehicule extends GestionBaseDeDonnees {
     }
 
     public function readAll(){
-        $query = "SELECT * FROM vehicule v JOIN categorie c ON c.id_categorie= v.id_categorie";
+        $query = "SELECT * FROM ListeVehicule";
         return  $this->select($query);
     }
  
@@ -45,6 +45,24 @@ class Vehicule extends GestionBaseDeDonnees {
         $query = "DELETE FROM  vehicule  WHERE id_vehicule = ?";
         $params = [$id];
         return  $this->execute($query, $params);
+    }
+
+    public function totalVehicules(){
+        $query = "SELECT COUNT(*) AS total FROM vehicule ";
+        $total = $this->select($query);
+        return $total[0]['total'];
+    }
+
+    public function vehiculesPerPage($page ,$itemsPerPage)
+    {
+
+        $offset = ($page - 1) * $itemsPerPage;
+        $query = $this->pdo->prepare("SELECT * FROM vehicule LIMIT :offset, :limit");
+        $query->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $query->bindParam(':limit', var: $itemsPerPage, type: PDO::PARAM_INT);
+        $query->execute();
+        return $query->fetchAll();
+
     }
 
 
