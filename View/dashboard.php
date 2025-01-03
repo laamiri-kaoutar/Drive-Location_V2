@@ -22,8 +22,6 @@ $statistics = new Statistics();
 $mostrented=$statistics->mostRented();
 $mostRated=$statistics->mostRated();
 
-// echo"<br>";
-// var_dump($statistics->totalFeedback());
 
 
 // var_dump($statistics->available());
