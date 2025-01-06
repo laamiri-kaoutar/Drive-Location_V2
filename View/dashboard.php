@@ -32,9 +32,6 @@ $reservations = $reservation->readAll();
 $avis = new Avis();
 $aviss = $avis->readAll();
 
-
-
-
 ?>
 
 
@@ -158,8 +155,8 @@ $aviss = $avis->readAll();
                             <td class="border p-2"><?= $reservation['date_debut'] ?></td>
                             <td class="border p-2"><?= $reservation['date_fin'] ?></td>
                             <td class="border p-2"><?= $reservation['lieu_prise_en_charge'] ?></td>
-                            <td class="border p-2 <?= $reservation['status'] === 'pending' ? 'text-warning' : ($reservation['status'] === 'approved' ? 'text-success' : 'text-danger') ?>">
-                            <?= ucfirst($reservation['status']) ?></td>
+                            <td class="border p-2  <?= $reservation['status'] === 'pending' ? 'text-yellow-500' : ($reservation['status'] === 'approved' ? 'text-green-500' : 'text-red-500') ?>">
+                                    <?= ucfirst($reservation['status']) ?> </td>
                             </tr>
 
                     <?php } ?>

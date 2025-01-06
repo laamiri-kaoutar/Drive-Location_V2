@@ -53,6 +53,11 @@ class Vehicule extends GestionBaseDeDonnees {
         return $total[0]['total'];
     }
 
+    public function isRentad($car , $user){
+        $query = "SELECT COUNT(*) AS total FROM vehicule ";
+        $car = $this->select($query);
+        return $car[0];
+    }
     public function vehiculesPerPage($page ,$itemsPerPage)
     {
 
