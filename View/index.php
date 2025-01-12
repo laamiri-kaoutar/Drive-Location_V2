@@ -2,12 +2,12 @@
     session_start();
 
 
-    // if (isset($_SESSION["user"])) {
-    //     $user=$_SESSION["user"];
-    //     var_dump($user);
-    // }else {
-    //     header("Location:./authen.php");
-    // }
+    if (isset($_SESSION["user"])) {
+        $user=$_SESSION["user"];
+        // var_dump($user);
+    }else {
+        header("Location:./authen.php");
+    }
 
 
 require_once '../Model/Vehicule.php';
@@ -203,9 +203,11 @@ $aviss = $avis->readByUser($user);
                     <span class="fa fa-bars"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarCollapse">
-                <button id="showAllButton" class="btn btn-secondary" onclick="filterByCategory('All')">Show All</button>
 
-                     <div class="navbar-nav ms-auto py-0 ">
+                     <div class="navbar-nav ms-auto py-0 flex items-center justify-between  ">
+                        <a href="./blog.php" class="text-blue-600 hover:text-blue-800 font-medium mt-8 underline hover:no-underline transition duration-200">  Blog</a>
+                        <button id="showAllButton" class="btn btn-secondary" onclick="filterByCategory('All')">Show All</button>
+
                          <!-- Search Bar -->
                          <div class="d-flex align-items-center mb-3" style="gap: 10px;">
                              <input 
@@ -224,7 +226,8 @@ $aviss = $avis->readByUser($user);
                              </button>
                          </div>
                          
-                         <!-- Dropdown Menu -->
+                         
+                         <!--  Menu -->
                          <div class="nav-item dropdown">
                              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
                                  Filter by Category
@@ -1012,7 +1015,7 @@ $aviss = $avis->readByUser($user);
                     })
                     .catch((error) => {
                         console.error("Error fetching category data:", error);
-                    });
+            });
         }  
 
         goToPage(1);

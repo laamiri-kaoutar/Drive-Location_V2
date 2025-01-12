@@ -13,6 +13,26 @@ require_once '../Model/Vehicule.php';
 require_once '../Model/categorie.php';
 require_once '../Model/Reservation.php';
 require_once '../Model/Avis.php';
+require_once '../Model/tag.php';
+require_once '../Model/theme.php';
+require_once '../Model/Comment.php';
+require_once '../Model/Article.php';
+
+
+
+$theme = new Theme();
+$themes = $theme->readAll();
+
+$article = new Article();
+$articles =$article->readAll();
+
+
+
+
+
+$tag = new Tag();
+$tags = $tag->readAll();
+
 
 
 $categorie = new Categorie();
@@ -65,46 +85,81 @@ $aviss = $avis->readAll();
 <body class="bg-gray-50 text-gray-700 font-title">
     <!-- Main Container -->
     <div class="flex min-h-screen">
-        <!-- Sidebar -->
+      
         <aside class="w-64 bg-primary text-white" id="sidebar">
-            <div class="p-6 flex flex-col">
-                <!-- Login Sign -->
-                <div class="flex items-center space-x-2 mb-6">
-                    <img src="profile-picture.jpg" alt="User Avatar" class="w-10 h-10 rounded-full">
-                    <span class="font-bold">John Doe</span>
-
-                </div>
-                <h1 class="text-xl font-bold mb-4">Go Rent</h1>
-            </div>
-            <nav class="p-6">
-                <ul class="space-y-4">
-                    <li><button data-section="clients" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
-                        <i class="ri-user-line"></i><span>Clients</span>
+    <div class="p-6 flex flex-col">
+        <!-- Login Sign -->
+        <div class="flex items-center space-x-2 mb-6">
+            <img src="profile-picture.jpg" alt="User Avatar" class="w-10 h-10 rounded-full">
+            <span class="font-bold">John Doe</span>
+        </div>
+        <h1 class="text-xl font-bold mb-4">Go Rent</h1>
+    </div>
+    <nav class="p-6">
+        <ul class="space-y-4">
+            <li><button data-section="clients" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
+                <i class="ri-user-line"></i><span>Clients</span>
+            </button></li>
+            <li><button data-section="reservations" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
+                <i class="ri-calendar-line"></i><span>Reservations</span>
+            </button></li>
+            <li><button data-section="vehicules" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
+                <i class="ri-car-line"></i><span>Vehicules</span>
+            </button></li>
+            <li><button data-section="categories" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
+                <i class="ri-folder-line"></i><span>Categories</span>
+            </button></li>
+            <li><button data-section="avis" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
+                <i class="ri-comment-line"></i><span>Avis/Opinions</span>
+            </button></li>
+            <li><button data-section="statistiques" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
+                <i class="ri-bar-chart-line"></i><span>Statistiques</span>
+            </button></li>
+            
+            <!-- Blog Section Dropdown -->
+            <li>
+                <button id="blogDropdownButton" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
+                    <i class="ri-article-line"></i><span>Blog</span>
+                </button>
+                <ul id="blogDropdown" class="space-y-2 pl-4 hidden">
+                    <li><button data-section="themes" class="dashboard-link w-full text-left p-2 hover:bg-gray-200 rounded">
+                        <i class="ri-article-line"></i><span>Themes</span>
                     </button></li>
-                    <li><button data-section="reservations" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
-                        <i class="ri-calendar-line"></i><span>Reservations</span>
+                    <li><button data-section="articles" class="dashboard-link w-full text-left p-2 hover:bg-gray-200 rounded">
+                        <i class="ri-pencil-line"></i><span>Articles</span>
                     </button></li>
-                    <li><button data-section="vehicules" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
-                        <i class="ri-car-line"></i><span>Vehicules</span>
+                    <li><button data-section="tags" class="dashboard-link w-full text-left p-2 hover:bg-gray-200 rounded">
+                        <i class="ri-price-tag-line"></i><span>Tags</span>
                     </button></li>
-                    <li><button data-section="categories" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
-                        <i class="ri-folder-line"></i><span>Categories</span>
+                    <li><button data-section="comments" class="dashboard-link w-full text-left p-2 hover:bg-gray-200 rounded">
+                        <i class="ri-message-line"></i><span>Comments</span>
                     </button></li>
-                    <li><button data-section="avis" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
-                        <i class="ri-comment-line"></i><span>Avis/Opinions</span>
-                    </button></li>
-                    <li><button data-section="statistiques" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-gray-200 rounded">
-                        <i class="ri-bar-chart-line"></i><span>Statistiques</span>
+                    <li><button data-section="favorites" class="dashboard-link w-full text-left p-2 hover:bg-gray-200 rounded">
+                        <i class="ri-heart-line"></i><span>Favorites</span>
                     </button></li>
                 </ul>
-                                      <!-- Logout Icon -->
-                    <div class="p-6 border-t border-gray-400">
-                        <button onclick="window.location.href='logout.php'" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-red-600 rounded">
-                            <i class="ri-logout-box-line"></i><span>Logout</span>
-                        </button>
-                    </div>
-            </nav>
-        </aside>
+            </li>
+        </ul>
+
+        <!-- Logout Icon -->
+        <div class="p-6 border-t border-gray-400">
+            <button onclick="window.location.href='logout.php'" class="dashboard-link w-full text-left flex items-center space-x-2 p-2 hover:bg-red-600 rounded">
+                <i class="ri-logout-box-line"></i><span>Logout</span>
+            </button>
+        </div>
+    </nav>
+</aside>
+
+<script>
+    // Toggle Blog Dropdown
+    const blogDropdownButton = document.getElementById('blogDropdownButton');
+    const blogDropdown = document.getElementById('blogDropdown');
+
+    blogDropdownButton.addEventListener('click', () => {
+        blogDropdown.classList.toggle('hidden');
+    });
+</script>
+
 
         <!-- Content -->
         <main class="flex-1 p-6">
@@ -537,6 +592,272 @@ $aviss = $avis->readAll();
 
                 </div>
             </section>
+<!-- Tags Section -->
+<section id="tags" class="dashboard-section hidden bg-white shadow-lg rounded-lg p-6 mb-6">
+    <h2 class="text-2xl font-bold text-primary mb-4">Tags</h2>
+    
+    <!-- Button to Open Tag Popup Form -->
+    <button id="openTagForm" class="bg-secondary text-white px-4 py-2 rounded mb-4 hover:bg-secondary-dark transition-all duration-300 ease-in-out">Add Tags</button>
+
+    <!-- Pop-up Form for Adding Tags -->
+    <div id="tagPopup" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div class="bg-white p-6 rounded-lg w-1/2">
+            <h3 class="text-xl font-bold text-primary mb-4">Add Tags</h3>
+            <form action="../Controller/addTag.php" method="POST" id="tagForm">
+                <!-- Multiple Tag Fields Container -->
+                <div id="tagFields">
+                    <!-- Initial Tag Field -->
+                    <div class="mb-4 tagField">
+                        <label for="tag_title" class="block mb-2">Tag Title:</label>
+                        <input type="text" name="tag_title[]" class="w-full p-2 border rounded mb-2" placeholder="Enter tag title" required>
+
+                        <label for="tag_color" class="block mb-2">Tag Color:</label>
+                        <select name="tag_color[]" class="w-full p-2 border rounded mb-4" required>
+                            <option value="red">Red</option>
+                            <option value="blue">Blue</option>
+                            <option value="green">Green</option>
+                            <option value="yellow">Yellow</option>
+                            <option value="purple">Purple</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Add More Tags Button -->
+                <button type="button" id="addTagField" class="bg-gray-300 text-black p-2 rounded mb-4">Add More Tags</button>
+
+                <button type="submit" class="bg-secondary text-white px-4 py-2 rounded mb-4 hover:bg-secondary-dark transition-all duration-300 ease-in-out">Save</button>
+                <button type="button" id="closeTagPopup" class="bg-gray-400 text-white p-2 rounded">Close</button>
+            </form>
+        </div>
+    </div>
+
+      <!-- Pop-up Form for updating Tags -->
+      <div id="updateTagPopup" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+        <div class="bg-white p-6 rounded-lg w-1/2">
+            <h3 class="text-xl font-bold text-primary mb-4">Update Tag</h3>
+            <form action="../Controller/updateTag.php" method="POST" id="tagForm">
+                <!-- Multiple Tag Fields Container -->
+                <div id="tagFields">
+                    <!-- Initial Tag Field -->
+                    <div class="mb-4 tagField">
+                        <input type="hidden" name="id_tag" id="id_tag" value="">
+
+                        <label for="tag_title" class="block mb-2">Tag Title:</label>
+                        <input type="text" id="tag_title" name="tag_title" class="w-full p-2 border rounded mb-2" placeholder="Enter tag title" required>
+
+                        <label for="tag_color" class="block mb-2">Tag Color:</label>
+                        <select name="tag_color" id="tag_color"  class="w-full p-2 border rounded mb-4" required>
+                            <option value="red">Red</option>
+                            <option value="blue">Blue</option>
+                            <option value="green">Green</option>
+                            <option value="yellow">Yellow</option>
+                            <option value="purple">Purple</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="bg-secondary text-white px-4 py-2 rounded mb-4 hover:bg-secondary-dark transition-all duration-300 ease-in-out">Save changes</button>
+                <button type="button" id="closeUpdateTag" class="bg-gray-400 text-white p-2 rounded">Close</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tags Table -->
+    <table class="w-full border-collapse border border-gray-300 mt-6">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="border p-2">Tag Title</th>
+                <th class="border p-2">Tag Color</th>
+                <th class="border p-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Example Row (PHP will populate this with actual data) -->
+            <?php foreach ($tags as $tag): ?>
+            <tr>
+                <td class="border p-2"><?= htmlspecialchars($tag['tag_title']) ?></td>
+                <td class="border p-2" style="background-color: <?= $tag['tag_color']; ?>"><?= ucfirst($tag['tag_color']) ?></td>
+                <td class="border p-2">
+                    <!-- Add Edit/Delete Actions -->
+                    <button class="bg-primary text-white p-1 rounded" onclick="openUpdateTagForm(<?= $tag['tag_id'] ?>)">Edit</button>
+                    <a href="../controller/deleteTag.php?id=<?= $tag['tag_id'] ?>">
+                        <button  class="bg-red-500 text-white p-1 rounded">Delete</button>
+                    </a>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</section>
+
+<!-- Theme Section -->
+<section id="themes" class="dashboard-section hidden bg-white shadow-lg rounded-lg p-6 mb-6">
+    <h2 class="text-2xl font-bold text-primary mb-4">Themes</h2>
+    
+    <!-- Button to Open Theme Popup Form -->
+    <button id="openThemeForm" class="bg-primary text-white p-2 rounded mb-4">Add Theme</button>
+
+<!-- Pop-up Form for Adding Theme -->
+<div id="themePopup" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded-lg w-1/2">
+        <h3 class="text-xl font-bold text-primary mb-4">Add Theme</h3>
+        <form action="../controller/addTheme.php" method="POST" id="themeForm">
+            <div class="mb-4">
+                <label for="theme_name" class="block mb-2">Theme Name:</label>
+                <input type="text" name="theme_name"  class="w-full p-2 border rounded mb-2" placeholder="Enter theme name" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="description" class="block mb-2">Description:</label>
+                <textarea name="description" id="description" class="w-full p-2 border rounded mb-4" placeholder="Enter theme description" rows="4" required></textarea>
+            </div>
+
+            <button type="submit" class="bg-primary text-white p-2 rounded mr-2">Save</button>
+            <button type="button" id="closeThemePopup" class="bg-gray-400 text-white p-2 rounded">Close</button>
+        </form>
+    </div>
+</div>
+
+
+<div id="updateTheme" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
+    <div class="bg-white p-6 rounded-lg w-1/2">
+        <h3 class="text-xl font-bold text-primary mb-4">Update Theme</h3>
+        <form action="../controller/updateTheme.php" method="POST" id="updateThemeForm">
+            <!-- Hidden input for Theme ID -->
+            <input type="hidden" name="theme_id" id="theme_id" value="">
+
+            <div class="mb-4">
+                <label for="theme_name" class="block mb-2">Theme Name:</label>
+                <input type="text" name="theme_name" id="theme_name" class="w-full p-2 border rounded mb-2" placeholder="Enter theme name" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="description" class="block mb-2">Description:</label>
+                <textarea name="description" id="theme_description" class="w-full p-2 border rounded mb-4" placeholder="Enter theme description" rows="4" required></textarea>
+            </div>
+
+            <button type="submit" class="bg-primary text-white p-2 rounded mr-2">Save</button>
+            <button type="button" id="closeUpdateTheme" class="bg-gray-400 text-white p-2 rounded">Close</button>
+        </form>
+    </div>
+</div>
+
+
+    <!-- Themes Table -->
+    <table class="w-full border-collapse border border-gray-300 mt-6">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="border p-2">Theme Name</th>
+                <th class="border p-2">Description</th>
+                <th class="border p-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Example Row (PHP will populate this with actual data) -->
+            <?php foreach ($themes as $theme): ?>
+            <tr>
+                <td class="border p-2"><?= htmlspecialchars($theme['theme_name']) ?></td>
+                <td class="border p-2"><?= nl2br(htmlspecialchars($theme['description'])) ?></td>
+                <td class="border p-2">
+                    <!-- Add Edit/Delete Actions -->
+                    <button class="bg-primary text-white p-1 rounded" onclick="openUpdateThemeForm(<?= $theme['theme_id'] ?>)">Edit</button>
+                        <a href="../controller/deleteTheme.php?id=<?= $theme['theme_id'] ?>">
+                            <button  class="bg-red-500 text-white p-1 rounded">Delete</button>
+                        </a>
+     
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+
+</section>
+
+<!-- Articles Section -->
+<section id="articles" class="dashboard-section hidden bg-white shadow-lg rounded-lg p-6 mb-6">
+    <h2 class="text-2xl font-bold text-primary mb-4">Articles</h2>
+    <table class="w-full border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="border p-2">Article Title</th>
+                <th class="border p-2">Theme</th>
+                <th class="border p-2">User</th>
+                <th class="border p-2">Content</th>
+                <th class="border p-2">Image</th>
+                <th class="border p-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Example article data -->
+            
+            <?php foreach ($articles as $article) : ?>
+                <tr>
+                    <td class="border p-2"><?= htmlspecialchars($article["article_title"]) ?></td>
+                    <td class="border p-2"> <?= htmlspecialchars($article["theme_name"]) ?></td>
+                    <td class="border p-2"><?= htmlspecialchars($article["username"]) ?></td>
+                    <td class="border p-2"><?= htmlspecialchars($article["content"]) ?></td>
+                    <td class="border p-2">
+                        <img class="h-24" src="./img/<?= htmlspecialchars($article["image"]) ?>" alt="">
+                    </td>
+                    <td class="border p-2">
+                        <button class="bg-secondary text-white px-4 py-2 rounded mb-4 hover:bg-secondary-dark transition-all duration-300 ease-in-out">Approve</button>
+                    </td>
+                </tr>
+            <?php endforeach ?>
+            
+        </tbody>
+    </table>
+</section>
+
+<!-- Comments Section -->
+<section id="comments" class="dashboard-section hidden bg-white shadow-lg rounded-lg p-6 mb-6">
+    <h2 class="text-2xl font-bold text-primary mb-4">Comments</h2>
+    <table class="w-full border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="border p-2">Article Title</th>
+                <th class="border p-2">User</th>
+                <th class="border p-2">Comment</th>
+                <th class="border p-2">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Example comment data -->
+            <tr>
+                <td class="border p-2">Example Article 1</td>
+                <td class="border p-2">User 1</td>
+                <td class="border p-2">This is a comment</td>
+                <td class="border p-2">
+                    <button class="bg-secondary text-white px-4 py-2 rounded mb-4 hover:bg-secondary-dark transition-all duration-300 ease-in-out">Approve</button>
+                    <button class="bg-danger text-white px-4 py-2 rounded mb-4 hover:bg-danger-dark transition-all duration-300 ease-in-out">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Favorites Section -->
+<section id="favorites" class="dashboard-section hidden bg-white shadow-lg rounded-lg p-6 mb-6">
+    <h2 class="text-2xl font-bold text-primary mb-4">Favorites</h2>
+    <table class="w-full border-collapse border border-gray-300">
+        <thead>
+            <tr class="bg-gray-100">
+                <th class="border p-2">Article Title</th>
+                <th class="border p-2">User</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Example favorite data -->
+            <tr>
+                <td class="border p-2">Example Article 1</td>
+                <td class="border p-2">User 1</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+
+            
         </main>
 
     </div>
@@ -544,6 +865,8 @@ $aviss = $avis->readAll();
     <script>
         // Toggle Dashboard Sections
         const dashboardLinks = document.querySelectorAll('.dashboard-link');
+        // console.log(dashboardLinks);
+        
         const sections = document.querySelectorAll('.dashboard-section');
 
         dashboardLinks.forEach(link => {
@@ -652,6 +975,101 @@ $aviss = $avis->readAll();
             newInput.innerHTML = '<input type="text" name="name[]" class="w-full border p-2" placeholder="Enter Category Name">';
             categoryFields.appendChild(newInput);
         });
+
+
+
+// Open the popup form for adding tags
+document.getElementById('openTagForm').addEventListener('click', function() {
+    document.getElementById('tagPopup').classList.remove('hidden');
+});
+
+// Close the popup form for tags
+document.getElementById('closeTagPopup').addEventListener('click', function() {
+    document.getElementById('tagPopup').classList.add('hidden');
+});
+
+// Open the popup form for adding theme
+document.getElementById('openThemeForm').addEventListener('click', function() {
+    document.getElementById('themePopup').classList.remove('hidden');
+});
+
+// Close the popup form for theme
+document.getElementById('closeThemePopup').addEventListener('click', function() {
+    document.getElementById('themePopup').classList.add('hidden');
+});
+
+// Add More Tags functionality
+document.getElementById('addTagField').addEventListener('click', function() {
+    const tagFieldsContainer = document.getElementById('tagFields');
+    const newTagField = document.createElement('div');
+    newTagField.classList.add('mb-4', 'tagField');
+    newTagField.innerHTML = `
+        <label for="tag_title" class="block mb-2">Tag Title:</label>
+        <input type="text" name="tag_title[]" class="w-full p-2 border rounded mb-2" placeholder="Enter tag title" required>
+
+        <label for="tag_color" class="block mb-2">Tag Color:</label>
+        <select name="tag_color[]" class="w-full p-2 border rounded mb-4" required>
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+            <option value="yellow">Yellow</option>
+            <option value="purple">Purple</option>
+        </select>
+    `;
+    
+    tagFieldsContainer.appendChild(newTagField);
+});
+
+// Open the popup form for adding tags
+ function openUpdateTagForm(tagId) {
+    fetch(`getTagData.php?tagId=${tagId}`)
+                .then((response) => response.json())
+                .then((tag) => {
+                    console.log(tag);
+                    
+                    document.getElementById('id_tag').value = tag.tag_id;
+                    document.getElementById('tag_title').value = tag.tag_title;
+                    document.getElementById('tag_color').value = tag.tag_color;
+
+                    document.getElementById('updateTagPopup').classList.remove('hidden');
+                })
+                .catch((error) => {
+                    console.error("Error fetching car data:", error);
+                });
+
+    
+}
+
+// Close the popup form for tags
+document.getElementById('closeUpdateTag').addEventListener('click', function() {
+    document.getElementById('updateTagPopup').classList.add('hidden');
+});
+
+// Open the popup form for adding theme
+function openUpdateThemeForm(id) {
+    fetch(`getThemeData.php?idtheme=${id}`)
+                .then((response) => response.json())
+                .then((theme) => {
+                    console.log(theme);
+                    
+                    document.getElementById('theme_id').value = theme.theme_id;
+                    document.getElementById('theme_name').value = theme.theme_name;
+                    document.getElementById('theme_description').value = theme.description;
+                    document.getElementById('updateTheme').classList.remove('hidden');
+                })
+                .catch((error) => {
+                    console.error("Error fetching car data:", error);
+                });
+
+    
+}
+
+// Close the popup form for theme
+document.getElementById('closeUpdateTheme').addEventListener('click', function() {
+    document.getElementById('updateTheme').classList.add('hidden');
+});
+
+        
     </script>
 </body>
 

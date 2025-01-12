@@ -74,4 +74,59 @@ END $$
 
 DELIMITER ;
 
- 
+-- Table: Theme
+CREATE TABLE theme (
+    theme_id INT AUTO_INCREMENT PRIMARY KEY,
+    theme_name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+-- Table: Article
+CREATE TABLE article (
+    article_id INT AUTO_INCREMENT PRIMARY KEY,
+    article_title VARCHAR(255) NOT NULL,
+    theme_id INT NOT NULL ,
+    user_id INT NOT NULL,
+    FOREIGN KEY (theme_id) REFERENCES theme(theme_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES utilisateur(user_id) ON DELETE CASCADE,
+    content TEXT,
+    image VARCHAR(255)
+);
+
+
+
+
+-- Table: Favorit
+CREATE TABLE favorit (
+    article_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    PRIMARY KEY (article_id, user_id),
+    FOREIGN KEY (article_id) REFERENCES article(article_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES utilisateur(user_id) ON DELETE CASCADE
+);
+
+-- Table: Tag
+CREATE TABLE tag (
+    tag_id INT AUTO_INCREMENT PRIMARY KEY,
+    tag_title VARCHAR(255) NOT NULL,
+    tag_color VARCHAR(50)
+);
+
+-- Table: Tagging (Relationship between Tag and Article)
+CREATE TABLE tagging (
+    tag_id INT NOT NULL,
+    article_id INT NOT NULL,
+    PRIMARY KEY (tag_id, article_id),
+    FOREIGN KEY (tag_id) REFERENCES tag(tag_id) ON DELETE CASCADE,
+    FOREIGN KEY (article_id) REFERENCES article(article_id) ON DELETE CASCADE
+);
+
+-- Table: Comment
+CREATE TABLE comment (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,
+    article_id INT NOT NULL,
+    user_id INT NOT NULL,
+    comment TEXT NOT NULL,
+    FOREIGN KEY (article_id) REFERENCES article(article_id) ON DELETE CASCADE ,
+    FOREIGN KEY (user_id) REFERENCES utilisateur(user_id) ON DELETE CASCADE
+);
